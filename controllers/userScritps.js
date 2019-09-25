@@ -3,7 +3,21 @@ const mongoose = require('mongoose');
 let User = require('./../models/user');
 
 exports.login = async function(req, res) {
+    let user = req.body;
 
+    //look for user
+    let checkUser = await User.findOne({email: user.email});
+
+    //User has been found
+    if(checkUser){
+        //Check password
+        if(checkUser.password === user.password){
+            res.status(200).send(checkUser);
+            return;
+        }
+    }
+    //Bad credentials
+    res.status(400).send('Wrong credentials');
 };
 
 exports.register = async function (req, res){
