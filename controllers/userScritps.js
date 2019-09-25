@@ -13,6 +13,7 @@ exports.register = async function (req, res){
     if(!user){
         console.log('Error: at register user has not been sent');
         res.status(400).send('User not sent');
+        return;
     }
 
     //Check for existing users with same email
@@ -20,6 +21,7 @@ exports.register = async function (req, res){
     if(userFound){
         console.log('Error: player with existing username ' + userFound.email + ' already exists');
         res.status(400).send('Error: player with existing username ' + userFound.email + ' already exists');
+        return;
     }
 
     //Add user to database
