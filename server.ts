@@ -1,14 +1,19 @@
 //Import libraries
 let express = require('express');
 let mongoose = require('mongoose');
+let bodyParser = require('body-parser');
 
 //Import routes
-let testRouter = require('./routes/testRoutes');
+let testRouter = require('./routes/test');
+let userRouter = require('./routes/user');
 
 //Server variable initialization
 let server = express();
 
+server.use(bodyParser());
+
 server.use('/test', testRouter);
+server.use('/user', userRouter);
 
 
 //Make server listen on port 3000
@@ -33,13 +38,13 @@ mongoose.connect("mongodb://localhost:27017/erasmus",{
 mongoose.connection.on('reconnected', () => {
     console.log('Database reconnected');
 });
-mongoose.connection.on('error', (err) => {
+mongoose.connection.on('error', (err: any) => {
     console.log(`Database error: ${err.message}`);
 });
 mongoose.connection.on('disconnected', () => {
     console.log('Database disconnected');
     //If database is disconnected it wil try again
-    mongoose.connect("mongodb://localhost:27017/ftd",{
+    mongoose.connect("mongodb://localhost:27017/erasmus",{
         useNewUrlParser: true,
         reconnectTries : Number.MAX_VALUE,
         autoReconnect : true,
