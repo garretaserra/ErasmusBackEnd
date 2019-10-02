@@ -12,4 +12,4 @@ let user = mongoose.Schema({
     events: []
 });
 
-module.exports = mongoose.model('User', user);
+module.exports = mongoose.model('User', user, "user");

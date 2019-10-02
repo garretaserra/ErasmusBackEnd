@@ -45,5 +45,4 @@ exports.register = async function (req, res){
             res.status(200).send('User has been registered successfully\n'+user);
         }
     )
-
 };
