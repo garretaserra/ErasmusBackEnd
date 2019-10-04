@@ -1,6 +1,7 @@
 'use strict';
-Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose = require("mongoose");
+import mongoose = require("mongoose");
+
+
 let user = mongoose.Schema({
     email: String,
     name: String,
@@ -10,4 +11,5 @@ let user = mongoose.Schema({
     following: [],
     events: []
 });
+
 module.exports = mongoose.model('User', user);
