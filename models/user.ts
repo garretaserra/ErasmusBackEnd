@@ -1,6 +1,6 @@
 'use strict';
+import mongoose = require("mongoose");
 
-let mongoose = require('mongoose');
 
 let user = mongoose.Schema({
     email: String,

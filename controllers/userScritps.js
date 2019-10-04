@@ -47,4 +47,3 @@ exports.register = async function (req, res){
     )
 };
 
-//esto es una novedad
