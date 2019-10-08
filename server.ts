@@ -2,6 +2,8 @@
 let express = require('express');
 let mongoose = require('mongoose');
 let bodyParser = require('body-parser');
+let swaggerUi = require('swagger-ui-express');
+let swaggerDocument = require('./swagger.json');
 
 //Import routes
 let testRouter = require('./routes/test');
@@ -14,7 +16,7 @@ server.use(bodyParser());
 
 server.use('/test', testRouter);
 server.use('/user', userRouter);
-
+server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 //Make server listen on port 3000
 server.listen(3000);
