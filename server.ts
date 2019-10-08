@@ -4,15 +4,26 @@ let mongoose = require('mongoose');
 let bodyParser = require('body-parser');
 let swaggerUi = require('swagger-ui-express');
 let swaggerDocument = require('./swagger.json');
+import express = require('express');
+import mongoose = require('mongoose');
+import bodyParser = require('body-parser');
+import cors = require('cors');
+import errorHandler = require('errorhandler');
+import session = require('express-session');
+
+//Import config
+import config = require('./config/passport');
 
 //Import routes
 let testRouter = require('./routes/test');
-let userRouter = require('./routes/user');
+let userRouter = require('./routes/api/user');
 
 //Server variable initialization
 let server = express();
-
+server.use(cors());
 server.use(bodyParser());
+server.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
+server.use(errorHandler());
 
 server.use('/test', testRouter);
 server.use('/user', userRouter);
