@@ -1,14 +1,23 @@
 {
   "name": "erasmusbackend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Erasmus App Backend",
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
+    "start": "tsc && node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/garretaserra/ErasmusBackEnd.git"
+  },
+  "author": "Mario Boto, Carlo Gattuso, Sergi Garreta, Sheila Lopez, Izan Perez",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eperezcosano/ErasmusBackEnd/issues"
+  },
+  "homepage": "https://github.com/eperezcosano/ErasmusBackEnd#readme",
   "dependencies": {
     "@types/express": "^4.17.1",
     "express": "^4.17.1",
