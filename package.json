@@ -1,19 +1,36 @@
 {
   "name": "erasmusbackend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Erasmus App Backend",
   "main": "index.js",
   "scripts": {
-    "tsc": "tsc && node server.js",
-    "nodemon": "tsc && nodemon server.js",
+    "tsc": "tsc",
+    "start": "tsc && node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/garretaserra/ErasmusBackEnd.git"
+  },
+  "author": "Mario Boto, Carlo Gattuso, Sergi Garreta, Sheila Lopez, Izan Perez",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eperezcosano/ErasmusBackEnd/issues"
+  },
+  "homepage": "https://github.com/eperezcosano/ErasmusBackEnd#readme",
   "dependencies": {
     "@types/express": "^4.17.1",
+    "cors": "^2.8.5",
+    "errorhandler": "^1.5.1",
     "express": "^4.17.1",
+    "express-jwt": "^5.3.1",
+    "express-session": "^1.16.2",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "socket.io": "^2.3.0",
+    "swagger-ui-express": "^4.1.2",
     "ts-node-dev": "^1.0.0-pre.43",
     "typescript": "^3.6.3"
   }
