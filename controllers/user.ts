@@ -9,6 +9,7 @@ function login(req: Request, res: Response): void {
     User.findOne({ "email": email, "password": password}).then((data) => {
         let status:number = 200;
         if(data == null) status = 404;
+        console.log(data);
         res.status(status).json(data);
     }).catch((err) => {
         res.status(500).json(err);
