@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import swaggerUi from 'swagger-ui-express'
+import io from 'socket.io'
 import router from './routes/index';
 
 const port: number = 3000;
@@ -42,4 +43,8 @@ mongoose.connection.on('disconnected', () => {
 
 app.listen(port, function () {
     console.log('Listening on http://localhost:' + port);
+});
+
+io.on('connection', function(socket){
+    console.log('a user connected');
 });
