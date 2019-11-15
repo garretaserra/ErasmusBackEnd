@@ -44,7 +44,3 @@ mongoose.connection.on('disconnected', () => {
 app.listen(port, function () {
     console.log('Listening on http://localhost:' + port);
 });
-
-io.on('connection', function(socket){
-    console.log('a user connected');
-});
