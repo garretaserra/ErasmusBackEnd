@@ -1,14 +1,12 @@
-'use strict';
-import mongoose = require("mongoose");
-import crypto = require("crypto");
-import jwt = require('jsonwebtoken');
+import {Schema, model} from 'mongoose'
+import crypto from 'crypto'
+import jwt from 'jsonwebtoken'
 
-
-let user = mongoose.Schema({
-    email: String,
-    name: String,
-    hash: String,
-    salt: String,
+const UserSchema: Schema = new Schema({
+    email: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
+    hash: { type: String, required: true },
+    salt: { type: String, required: true },
     profilePhoto: String,
     follows: [],
     following: [],
@@ -45,4 +43,4 @@ user.methods.toAuthJSON = function() {
     };
 };
 
-module.exports = mongoose.model('User', user);
+export default model('User', UserSchema);

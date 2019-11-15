@@ -59,7 +59,7 @@
         }
       }
     },
-    "/users/login": {
+    "/user/login": {
       "post": {
         "tags": [
           "User"
