@@ -1,5 +1,5 @@
-let express = require('express');
-let router = express.Router();
+import express = require('express');
+let router: express.Router = express.Router();
 
 let testScripts = require('../controllers/testScripts');
 
