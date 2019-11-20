@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "start": "tsc && node index.js",
+    "start": "tsc && node index.js local",
+    "prod": "tsc && node index.js prod",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
