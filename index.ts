@@ -53,5 +53,10 @@ mongoose.connection.on('disconnected', () => {
 });
 
 app.listen(port, function () {
-    console.log('Listening on http://localhost:' + port);
+    if(env == 'local') {
+        console.log('Listening on http://localhost:' + port);
+    }
+    else {
+        console.log('Listening on http://147.83.115.94:' + port);
+    }
 });
