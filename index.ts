@@ -3,15 +3,26 @@ import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import swaggerUi from 'swagger-ui-express'
-import io from 'socket.io'
 import router from './routes/index';
 
 const port: number = 3000;
 const MONGO_URI: string = 'mongodb://localhost:27017/erasmus';
 const app: express.Application = express();
+const server = app.listen(port);
+const io = require('socket.io').listen(server);
 
-app.use(cors());
-app.options('*',cors());
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "http://localhost:4000");
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    );
+    res.header("Access-Control-Allow-Credentials", "true");
+    if (req.method === 'OPTIONS') {
+        res.header("Access-Control-Allow-Methods", 'PUT, POST, PATCH, DELETE, GET')
+    }
+    next()
+});
 app.use( express.json() );
 app.use( '', router );
 app.use( bodyParser.json() );
@@ -41,6 +52,6 @@ mongoose.connection.on('disconnected', () => {
     console.log('Database disconnected');
 });
 
-app.listen(port, function () {
-    console.log('Listening on http://localhost:' + port);
+io.on('connection', function(socket){
+    console.log('a user connected');
 });
