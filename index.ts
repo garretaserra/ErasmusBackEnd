@@ -7,8 +7,19 @@ import io from 'socket.io'
 import router from './routes/index';
 
 const port: number = 3000;
-const MONGO_URI: string = 'mongodb://localhost:27017/erasmus';
 const app: express.Application = express();
+
+let MONGO_URI : string = '';
+
+let env = process.argv[2];
+if(env == 'local') {
+    console.log("Despliegue local");
+    MONGO_URI = 'mongodb://localhost:27017/erasmus';
+}
+else {
+    console.log("Despliegue en producción");
+    MONGO_URI = 'mongodb://mongo:27017/erasmus';
+}
 
 app.use(cors());
 app.options('*',cors());
@@ -42,5 +53,10 @@ mongoose.connection.on('disconnected', () => {
 });
 
 app.listen(port, function () {
-    console.log('Listening on http://localhost:' + port);
+    if(env == 'local') {
+        console.log('Listening on http://localhost:' + port);
+    }
+    else {
+        console.log('Listening on http://147.83.7.156:' + port);
+    }
 });
