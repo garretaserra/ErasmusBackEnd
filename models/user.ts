@@ -4,9 +4,10 @@ import jwt from 'jsonwebtoken'
 
 const UserSchema: Schema = new Schema({
     email: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
-    hash: { type: String, required: true },
-    salt: { type: String, required: true },
+    name: { type: String},
+    hash: { type: String},
+    salt: { type: String},
+    password: {type: String},
     profilePhoto: String,
     follows: [],
     following: [],
