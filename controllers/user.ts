@@ -14,7 +14,6 @@ function login(req: Request, res: Response): void {
     }).catch((err) => {
         res.status(500).json(err);
     })
-
 }
 
 function register(req: Request, res: Response): void {
