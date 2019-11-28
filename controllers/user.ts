@@ -3,6 +3,7 @@ import User from '../models/user';
 
 function login(req: Request, res: Response): void {
 
+    console.log("Request body: ", req.body);
     const email: string = req.body.email;
     const password: string = req.body.password;
 
