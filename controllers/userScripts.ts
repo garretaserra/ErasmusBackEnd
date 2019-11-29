@@ -1,12 +1,11 @@
 'use strict';
 import mongoose = require('mongoose');
 import passport = require('passport');
-
-let User = require('./../models/user');
+import User from '../models/user';
 
 exports.login = async function(req, res, next) {
     //Get user data for login
-    const { body: { user } } = req;
+    const user = req.body;
     if(!user.email) {
         return res.status(422).json({
             errors: {
@@ -21,22 +20,20 @@ exports.login = async function(req, res, next) {
             },
         });
     }
-    return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
-        if(err) {
-            return next(err);
+    await User.findOne({email: user.email}).then((data)=>{
+        let finalUser = data;
+        if(!finalUser)
+            return res.status(400).send('Not found');
+        if(finalUser.validatePassword(finalUser.password)) {
+            let jwt = finalUser.generateJWT();
+            return res.status(200).json({jwt: jwt});
         }
-        if(passportUser) {
-            const user = passportUser;
-            user.token = passportUser.generateJWT();
-
-            return res.status(200).json({ user: user.toAuthJSON() });
         }
-        return res.status(400).info;
-    })
+    );
 };
 
 exports.register = async function (req, res){
-    const { body: { user } } = req;
+    const user= req.body;
 
     if(!user.email) {
         return res.status(422).json({
@@ -55,9 +52,7 @@ exports.register = async function (req, res){
     }
 
     const finalUser = new User(user);
-
     finalUser.setPassword(user.password);
-
     return finalUser.save()
         .then(() => res.json({ user: finalUser.toAuthJSON() }));
 };
