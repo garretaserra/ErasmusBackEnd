@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import swaggerUi from 'swagger-ui-express'
 import router from './routes/index';
+import {Socket} from "socket.io";
 
 const port: number = 3000;
 const MONGO_URI: string = 'mongodb://localhost:27017/erasmus';
@@ -52,6 +53,29 @@ mongoose.connection.on('disconnected', () => {
     console.log('Database disconnected');
 });
 
-io.on('connection', function(socket){
-    console.log('a user connected');
-});
+//Socket IO
+let socketList: Array<Socket> = [];
+io.on('connection', onConnection);
+
+function onConnection(socket) {
+
+    socketList.push(socket);
+    console.log('a user connected. Connected: ' + socketList.length);
+
+    io.emit('socketList', socketList.map(item => item.id));
+
+    socket.on('setName', function (name) {
+        console.log('Socket set name: ' + name);
+    });
+
+    socket.on('message', function (data) {
+        console.log(data.message + " by " + socket.id + " to " + data.destination);
+        io.to(data.destination).emit('message', data);
+    });
+
+    socket.on('disconnect', function() {
+        console.log('a user disconnected');
+        socketList.splice(socketList.indexOf(socket), 1);
+        console.log(socketList.length);
+    });
+}
