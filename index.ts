@@ -75,7 +75,7 @@ function eventListener() {
     else {
         console.log('Listening on http://147.83.7.156:' + port);
     }
-});
+}
 
 /* Socket IO */
 
