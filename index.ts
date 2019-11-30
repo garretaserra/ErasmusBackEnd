@@ -7,7 +7,7 @@ import {Socket} from "socket.io";
 
 const port: number = 3000;
 const app: express.Application = express();
-const server = app.listen(port);
+const server = app.listen(port, eventListener);
 const io = require('socket.io').listen(server);
 
 
@@ -68,7 +68,7 @@ mongoose.connection.on('disconnected', () => {
     console.log('Database disconnected');
 });
 
-app.listen(port, function () {
+function eventListener() {
     if(env == 'local') {
         console.log('Listening on http://localhost:' + port);
     }
