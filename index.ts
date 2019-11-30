@@ -77,19 +77,26 @@ app.listen(port, function () {
     }
 });
 
-//Socket IO
+/* Socket IO */
+
+//Let us define a hashMap being the key the username and the values its socketId
 let userList = {};
+
+//Event listener when a socket is connected
 io.on('connection', onConnection);
 
 function onConnection(socket) {
 
     console.log('a user connected');
 
+    //Once connected, the socket is attached with a query param name
     let username: string = socket.handshake.query.name;
+    //We store it in the hashMap with the corresponding socketId
     userList[username] = socket.id;
 
     console.log(username + ": " + userList[username]);
 
+    //Private message user-to-user if both are online, otherwise store it
     socket.on('message', function (data) {
         console.log(data.message + " by " + username + " to " + data.destination);
         if (userList[data.destination] == null) {
@@ -100,6 +107,7 @@ function onConnection(socket) {
         }
     });
 
+    //On a disconnection, delete its socketId from the hashMap
     socket.on('disconnect', function() {
         console.log(username + ' disconnected');
         userList[username] = null;
