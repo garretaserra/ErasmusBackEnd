@@ -54,28 +54,30 @@ mongoose.connection.on('disconnected', () => {
 });
 
 //Socket IO
-let socketList: Array<Socket> = [];
+let userList = {};
 io.on('connection', onConnection);
 
 function onConnection(socket) {
 
-    socketList.push(socket);
-    console.log('a user connected. Connected: ' + socketList.length);
+    console.log('a user connected');
 
-    io.emit('socketList', socketList.map(item => item.id));
+    let username: string = socket.handshake.query.name;
+    userList[username] = socket.id;
 
-    socket.on('setName', function (name) {
-        console.log('Socket set name: ' + name);
-    });
+    console.log(username + ": " + userList[username]);
 
     socket.on('message', function (data) {
-        console.log(data.message + " by " + socket.id + " to " + data.destination);
-        io.to(data.destination).emit('message', data);
+        console.log(data.message + " by " + username + " to " + data.destination);
+        if (userList[data.destination] == null) {
+            console.log('user not online');
+            //TODO: store msg database
+        } else {
+            io.to(userList[data.destination]).emit('message', data);
+        }
     });
 
     socket.on('disconnect', function() {
-        console.log('a user disconnected');
-        socketList.splice(socketList.indexOf(socket), 1);
-        console.log(socketList.length);
+        console.log(username + ' disconnected');
+        userList[username] = null;
     });
 }
