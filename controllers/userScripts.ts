@@ -26,7 +26,11 @@ exports.login = async function(req, res, next) {
             return res.status(400).send('Not found');
         if(finalUser.validatePassword(finalUser.password)) {
             let jwt = finalUser.generateJWT();
-            return res.status(200).json({jwt: jwt});
+            //TODO: remove fields that are not necessary for the frontend
+
+            // finalUser.hash = undefined;
+            // finalUser.salt = undefined;
+            return res.status(200).json({jwt: jwt, user: finalUser});
         }
         }
     );
