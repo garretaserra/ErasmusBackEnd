@@ -54,6 +54,7 @@ exports.register = async function (req, res){
             },
         });
     }
+    //TODO: Add name validation
 
     const finalUser = new User(user);
     finalUser.setPassword(user.password);
