@@ -5,6 +5,8 @@ import swaggerUi from 'swagger-ui-express'
 import router from './routes/index';
 import {Socket} from "socket.io";
 
+let swaggerDocument = require('./swagger');
+
 const port: number = 3000;
 const app: express.Application = express();
 const server = app.listen(port, eventListener);
@@ -24,10 +26,8 @@ else {
 }
 
 
-
-
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+    res.header("Access-Control-Allow-Origin", "*");
     res.header(
         "Access-Control-Allow-Headers",
         "Origin, X-Requested-With, Content-Type, Accept, Authorization"
@@ -42,7 +42,7 @@ app.use((req, res, next) => {
 app.use( express.json() );
 app.use( '', router );
 app.use( bodyParser.json() );
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup('swagger.json'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,

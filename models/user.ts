@@ -9,9 +9,9 @@ const UserSchema: Schema = new Schema({
     salt: { type: String},
     password: {type: String},
     profilePhoto: String,
-    follows: [],
-    following: [],
-    events: []
+    followers: [],//Gente que me sigue a mí
+    following: [],//Gente a la que yo sigo
+    posts: []
 });
 
 UserSchema.methods.setPassword = function(password) {
