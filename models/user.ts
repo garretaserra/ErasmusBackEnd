@@ -9,9 +9,9 @@ const UserSchema: Schema = new Schema({
     salt: { type: String},
     password: {type: String},
     profilePhoto: String,
-    follows: [],
-    following: [],
-    events: []
+    followers: [],//Gente que me sigue a mí
+    following: [],//Gente a la que yo sigo
+    posts: []
 });
 
 UserSchema.methods.setPassword = function(password) {
@@ -27,8 +27,8 @@ UserSchema.methods.validatePassword = function(password) {
 UserSchema.methods.generateJWT = function() {
     const today = new Date();
     const expirationDate = new Date(today);
-    expirationDate.setDate(today.getDate() + 60);
-
+    const minutes = 60;
+    expirationDate.setTime(today.getTime() + minutes*60000);
     return jwt.sign({
         email: this.email,
         id: this._id,
