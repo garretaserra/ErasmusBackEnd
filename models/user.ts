@@ -1,4 +1,6 @@
-import {Schema, model} from 'mongoose'
+let mongoose = require('mongoose');
+
+import {Schema} from 'mongoose'
 import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
 
@@ -9,9 +11,9 @@ const UserSchema: Schema = new Schema({
     salt: { type: String},
     password: {type: String},
     profilePhoto: String,
-    followers: [],//Gente que me sigue a mí
-    following: [],//Gente a la que yo sigo
-    posts: []
+    followers: [{ type: Schema.ObjectId, ref: 'User', unique: false }], //Gente que me sigue a mí
+    following: [{ type: Schema.ObjectId, ref: 'User', unique: false }], //Gente a la que yo sigo
+    posts: [{ type: Schema.ObjectId, ref: 'Post', unique: false }]
 });
 
 UserSchema.methods.setPassword = function(password) {
@@ -44,4 +46,4 @@ UserSchema.methods.toAuthJSON = function() {
     };
 };
 
-export default model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);

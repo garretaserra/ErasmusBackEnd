@@ -17,6 +17,9 @@
     },
     {
       "name": "User"
+    },
+    {
+      "name": "Post"
     }
   ],
   "schemes": [
@@ -225,6 +228,42 @@
           }
         }
       }
+    },
+    "/post/newPost": {
+      "post": {
+        "tags": [
+          "Post"
+        ],
+        "description": "Add new post",
+        "parameters": [
+          {
+            "name": "Post",
+            "in": "body",
+            "required": true,
+            "description": "Post information",
+            "schema": {
+              "$ref": "#/definitions/NewPost"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Posted succesfully",
+            "schema": {
+              "$ref": "#/definitions/post"
+            }
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -358,6 +397,26 @@
               }
             }
           }
+        }
+      }
+    },
+    "NewPost": {
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "post": {
+          "$ref": "#/definitions/post"
+        }
+      }
+    },
+    "post": {
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
         }
       }
     }

@@ -1,11 +1,13 @@
 import express from 'express'
-import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import swaggerUi from 'swagger-ui-express'
 import router from './routes/index';
 import {Socket} from "socket.io";
 
 let swaggerDocument = require('./swagger');
+let mongoose = require('mongoose');
+require('./models/user');
+require('./models/post');
 
 const port: number = 3000;
 const app: express.Application = express();
