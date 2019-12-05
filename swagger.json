@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "Node.js Application API",
-    "description": "Yet Another Node.js Application API",
+    "title": "Erasmus RESTAPI",
+    "description": "REST API of Applications Engineering Project -- Erasmus",
     "license": {
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
@@ -13,8 +13,13 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "User",
-      "description": "API for users in the system"
+      "name": "Auth"
+    },
+    {
+      "name": "User"
+    },
+    {
+      "name": "Post"
     }
   ],
   "schemes": [
@@ -27,51 +32,20 @@
     "application/json"
   ],
   "paths": {
-    "/user/register": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "description": "Create new user in system",
-        "parameters": [
-          {
-            "name": "user",
-            "in": "body",
-            "description": "User that we want to create",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "201": {
-            "description": "New user is created",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          },
-          "400": {
-            "description": "User already exists"
-          }
-        }
-      }
-    },
     "/user/login": {
       "post": {
         "tags": [
-          "User"
+          "Auth"
         ],
-        "description": "Authenticate existing user in system",
+        "description": "Log in any user",
         "parameters": [
           {
-            "name": "user",
+            "name": "Credentials",
             "in": "body",
-            "description": "User to authenticate",
+            "required": true,
+            "description": "User information to log in",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/Credentials"
             }
           }
         ],
@@ -82,28 +56,247 @@
           "200": {
             "description": "User logged in",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/Login"
             }
           },
-          "400": {
-            "description": "Wrong credentials"
+          "401": {
+            "description": "Bad password"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Create new user",
+        "parameters": [
+          {
+            "name": "Register fields",
+            "in": "body",
+            "required": true,
+            "description": "User that you want to add",
+            "schema": {
+              "$ref": "#/definitions/Register"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "User created successfully",
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
+          },
+          "409": {
+            "description": "Existant User"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user/getUsersByEmail/{piece}": {
+      "parameters": [
+        {
+          "name": "piece",
+          "in": "path",
+          "required": true,
+          "description": "Email piece of any user ",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get an array of users containing piece of email",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ArrayOfUsers"
+            }
+          },
+          "204": {
+            "description": "Empty list"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user/getUserByEmail/{email}": {
+      "parameters": [
+        {
+          "name": "email",
+          "in": "path",
+          "required": true,
+          "description": "Email of any user",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user by email",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/user"
+            }
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user/follow": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "description": "Follow someone",
+        "parameters": [
+          {
+            "name": "Follow parameters",
+            "in": "body",
+            "required": true,
+            "description": "Follow any user to see his activity",
+            "schema": {
+              "$ref": "#/definitions/Follow"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Followed successfully"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user/unfollow": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "description": "Unfollow someone",
+        "parameters": [
+          {
+            "name": "Unfollow parameters",
+            "in": "body",
+            "required": true,
+            "description": "Unfollow any user to avoid his activity",
+            "schema": {
+              "$ref": "#/definitions/UnFollow"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Unfollowed successfully"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/post/newPost": {
+      "post": {
+        "tags": [
+          "Post"
+        ],
+        "description": "Add new post",
+        "parameters": [
+          {
+            "name": "Post",
+            "in": "body",
+            "required": true,
+            "description": "Post information",
+            "schema": {
+              "$ref": "#/definitions/NewPost"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Posted succesfully",
+            "schema": {
+              "$ref": "#/definitions/post"
+            }
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
     }
   },
   "definitions": {
-    "User": {
+    "Credentials": {
       "required": [
         "email",
-        "name"
+        "password"
       ],
       "properties": {
         "email": {
-          "type": "string",
-          "uniqueItems": true
+          "type": "string"
         },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "Login": {
+      "properties": {
+        "auth": {
+          "type": "string"
+        },
+        "user": {
+          "$ref": "#/definitions/user"
+        }
+      }
+    },
+    "user": {
+      "properties": {
         "name": {
+          "type": "string"
+        },
+        "email": {
           "type": "string"
         },
         "password": {
@@ -112,23 +305,118 @@
         "profilePhoto": {
           "type": "string"
         },
-        "follows": {
+        "followers": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string"
+              }
+            }
           }
         },
         "following": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string"
+              }
+            }
           }
         },
-        "events": {
+        "posts": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string"
+              }
+            }
           }
+        }
+      }
+    },
+    "Register": {
+      "required": [
+        "name",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "Follow": {
+      "required": [
+        "userId",
+        "followedId"
+      ],
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "followedId": {
+          "type": "string"
+        }
+      }
+    },
+    "UnFollow": {
+      "required": [
+        "userId",
+        "unFollowedId"
+      ],
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "followedId": {
+          "type": "string"
+        }
+      }
+    },
+    "ArrayOfUsers": {
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "email": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "NewPost": {
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "post": {
+          "$ref": "#/definitions/post"
+        }
+      }
+    },
+    "post": {
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
         }
       }
     }

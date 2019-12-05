@@ -1,4 +1,6 @@
-import {Schema, model} from 'mongoose'
+let mongoose = require('mongoose');
+
+import {Schema} from 'mongoose'
 import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
 
@@ -9,9 +11,9 @@ const UserSchema: Schema = new Schema({
     salt: { type: String},
     password: {type: String},
     profilePhoto: String,
-    follows: [],
-    following: [],
-    events: []
+    followers: [{ type: Schema.ObjectId, ref: 'User', unique: false }], //Gente que me sigue a mí
+    following: [{ type: Schema.ObjectId, ref: 'User', unique: false }], //Gente a la que yo sigo
+    posts: [{ type: Schema.ObjectId, ref: 'Post', unique: false }]
 });
 
 UserSchema.methods.setPassword = function(password) {
@@ -27,8 +29,8 @@ UserSchema.methods.validatePassword = function(password) {
 UserSchema.methods.generateJWT = function() {
     const today = new Date();
     const expirationDate = new Date(today);
-    expirationDate.setDate(today.getDate() + 60);
-
+    const minutes = 60;
+    expirationDate.setTime(today.getTime() + minutes*60000);
     return jwt.sign({
         email: this.email,
         id: this._id,
@@ -44,4 +46,4 @@ UserSchema.methods.toAuthJSON = function() {
     };
 };
 
-export default model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);

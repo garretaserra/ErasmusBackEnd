@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import userRouter from './user';
-
+import {userRouter} from './user';
+import {postRouter} from './post';
+let auth = require('./auth');
 const router: Router = Router();
 
-router.use('/api', require('./api'));
-router.use('/user', userRouter);
+router.use('/user', auth.optional, userRouter);
+router.use('/post', auth.optional, postRouter);
 
 export default router;
