@@ -61,3 +61,11 @@ exports.register = async function (req, res){
     return finalUser.save()
         .then(() => res.json({ user: finalUser.toAuthJSON() }));
 };
+
+exports.search = async function(req, res) {
+    let searchString: string = req.query.searchString;
+    let pattern = new RegExp('^' + searchString);
+    await User.find({"email": pattern}).then((users=>{
+        res.status(200).json(users);
+    }));
+};
