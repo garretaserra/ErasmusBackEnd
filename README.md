@@ -9,7 +9,7 @@
 
 ## Models
 
-##### User schema
+##### UserRegister schema
 
 ```typescript
 const UserSchema: Schema = new Schema({
@@ -27,8 +27,8 @@ const UserSchema: Schema = new Schema({
 
 | Model | Type | Route | Description | Body JSON |
 | :---:| :---: | --- | --- | --- |
-| USER | POST | /user/login | Get all users | User model |
-|  | POST | /user/register | Get user by its id | User model |
+| USER | POST | /user/login | Get all users | UserRegister model |
+|  | POST | /user/register | Get user by its id | UserRegister model |
 
 #### Technologies
 

@@ -3,8 +3,8 @@ let User = require('../models/user');
 
 exports.login = async function(req, res, next) {
     //Get user data for login
-    const user = req.body.user;
-
+    const user = req.body;
+    console.log("user:", req.body);
     if(!user.email) {
         return res.status(422).json({
             errors: {
@@ -37,7 +37,8 @@ exports.login = async function(req, res, next) {
 };
 
 exports.register = async function (req, res){
-    const user= req.body.user;
+    const user= req.body;
+    console.log("body: ", req.body);
     if(!user.email) {
         return res.status(422).json({
             errors: {
@@ -56,6 +57,7 @@ exports.register = async function (req, res){
 
     const finalUser = new User(user);
     finalUser.setPassword(user.password);
+    console.log("User Validation: ", finalUser.password);
     return finalUser.save()
         .then(() => res.json({ user: finalUser.toAuthJSON() }));
 };
