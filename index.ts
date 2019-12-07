@@ -70,6 +70,11 @@ mongoose.connection.on('disconnected', () => {
     console.log('Database disconnected');
 });
 
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
+
 function eventListener() {
     if(env == 'local') {
         console.log('Listening on http://localhost:' + port);

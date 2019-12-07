@@ -321,7 +321,7 @@
           "items": {
             "type": "object",
             "properties": {
-              "email": {
+              "id": {
                 "type": "string"
               }
             }
@@ -332,7 +332,7 @@
           "items": {
             "type": "object",
             "properties": {
-              "email": {
+              "id": {
                 "type": "string"
               }
             }
