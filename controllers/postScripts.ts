@@ -1,5 +1,6 @@
 'use strict';
-let Post = require('../models/post');
+import User from '../models/user';
+import Post from '../models/post';
 
 exports.newPost = async function(req, res, next) {
     let userId = req.body.userId;
@@ -12,7 +13,7 @@ exports.newPost = async function(req, res, next) {
     if (!userFound) {
         return res.status(404).send({message: 'User not found'})
     } else {
-        await User.findOneAndUpdate({_id: userId}, {$addToSet: {posts: post._id}});
+        await User.findAndModify({_id: userId}, {$addToSet:{posts: post._id, activity: post._id}});
         return post.save()
             .then(() => res.status(200).send({post:post}));
     }

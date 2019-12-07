@@ -1,5 +1,5 @@
 'use strict';
-let User = require('../models/user');
+import User from '../models/user';
 
 exports.login = async function(req, res, next) {
     //Get user data for login
@@ -20,7 +20,7 @@ exports.login = async function(req, res, next) {
         });
     }
 
-    await User.findOne({email: user.email}).populate('followers').populate('following').populate('posts').then((data)=> {
+    await User.findOne({email: user.email}).populate('followers').populate('following').populate('posts').populate('activity').then((data)=> {
             let finalUser = data;
             if (!finalUser)
                 return res.status(400).send('Not found');
