@@ -412,6 +412,9 @@
     },
     "post": {
       "properties": {
+        "owner": {
+          "type": "string"
+        },
         "type": {
           "type": "string"
         },
