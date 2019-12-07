@@ -1,5 +1,5 @@
 'use strict';
-let User = require('../models/user');
+import User from '../models/user';
 
 exports.login = async function(req, res, next) {
     //Get user data for login
