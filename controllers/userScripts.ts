@@ -1,5 +1,6 @@
 'use strict';
 import User from '../models/user';
+import Profile from '../models/profile';
 
 exports.login = async function(req, res, next) {
     const user = req.body;
@@ -108,6 +109,23 @@ exports.unFollow = async function (req,res) {
             }
             return res.status(200).send({message: 'UnFollowed successfully'});
         }
+    }
+};
+
+exports.getUsersName = async function(req, res) {
+    let users = await User.find({}, {name:1})
+    console.log(users);
+    return res.status(200).send(users);
+};
+
+exports.getProfile = async function(req,res) {
+    let userId = req.params.userId;
+    let userFound = await User.findById(userId);
+    if (!userFound) {
+        return res.status(404).send({message: 'User not found'})
+    } else {
+        let profile = new Profile(userFound._id, userFound.email, userFound.name, userFound.followers.length, userFound.following.length, userFound.posts.length);
+        return res.status(200).send(profile);
     }
 };
 
