@@ -14,7 +14,7 @@ const UserSchema: Schema = new Schema({
     followers: [{ type: Schema.ObjectId, ref: 'User', unique: false }], //Gente que me sigue a mí
     following: [{ type: Schema.ObjectId, ref: 'User', unique: false }], //Gente a la que yo sigo
     posts: [{ type: Schema.ObjectId, ref: 'Post', unique: false }],
-    activity : [{ type : Schema.ObjectId , unique: false }]
+    activity : [{ type : Schema.ObjectId, ref: 'Post', unique: false }]
 });
 
 UserSchema.methods.setPassword = function(password) {

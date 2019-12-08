@@ -1,6 +1,7 @@
 'use strict';
 import User from '../models/user';
 import Post from '../models/post';
+import user from "../models/user";
 
 exports.newPost = async function(req, res, next) {
     let userId = req.body.userId;
