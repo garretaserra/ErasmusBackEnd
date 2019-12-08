@@ -1,4 +1,6 @@
 'use strict';
+
+import { Request, Response } from 'express';
 import User from '../models/user';
 
 exports.login = async function(req, res, next) {

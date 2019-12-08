@@ -2,7 +2,6 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import swaggerUi from 'swagger-ui-express'
 import router from './routes/index';
-import {Socket} from "socket.io";
 
 let swaggerDocument = require('./swagger');
 let mongoose = require('mongoose');
@@ -96,16 +95,18 @@ function onConnection(socket) {
 
     console.log('a user connected');
 
-    //Once connected, the socket is attached with a query param name
-    let username: string = socket.handshake.query.name;
+    //Once connected, the socket is attached with a query param email
+    let email: string = socket.handshake.query.email;
     //We store it in the hashMap with the corresponding socketId
-    userList[username] = socket.id;
+    userList[email] = socket.id;
 
-    console.log(username + ": " + userList[username]);
+    console.log(email + ": " + userList[email]);
+
+    io.emit('userList', userList);
 
     //Private message user-to-user if both are online, otherwise store it
     socket.on('message', function (data) {
-        console.log(data.message + " by " + username + " to " + data.destination);
+        console.log(data.message + " by " + email + " to " + data.destination);
         if (userList[data.destination] == null) {
             console.log('user not online');
             //TODO: store msg database
@@ -116,8 +117,9 @@ function onConnection(socket) {
 
     //On a disconnection, delete its socketId from the hashMap
     socket.on('disconnect', function() {
-        console.log(username + ' disconnected');
-        userList[username] = null;
+        console.log(email + ' disconnected');
+        userList[email] = null;
+        io.emit('userList', userList);
     });
 }
 
