@@ -1,6 +1,5 @@
 'use strict';
 import User from '../models/user';
-import Post from "../models/post";
 
 exports.login = async function(req, res, next) {
     const user = req.body;
