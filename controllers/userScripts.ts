@@ -111,6 +111,12 @@ exports.unFollow = async function (req,res) {
     }
 };
 
+exports.getUsersName = async function(req, res) {
+    let users = await User.find({}, {name:1})
+    console.log(users);
+    return res.status(200).send(users);
+};
+
 exports.search = async function(req, res) {
     let searchString: string = req.query.searchString;
     let pattern = new RegExp('^' + searchString);

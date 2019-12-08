@@ -8,12 +8,15 @@ exports.newPost = async function(req, res, next) {
 
     console.log(`New post --> UserID: ${userId}, Post: ${post}`);
 
-    let userFound = await User.findById(userId);
+    let userFound = await User.findById(userId).populate('followers');
 
     if (!userFound) {
         return res.status(404).send({message: 'User not found'})
     } else {
         await User.findOneAndUpdate({_id: userId}, {$addToSet:{posts: post._id, activity: post._id}});
+        for(let i = 0; i < userFound.followers.length;i++){
+            await User.updateOne({_id: userFound.followers[i]._id}, {$addToSet: {activity: post._id}});
+        }
         return post.save()
             .then(() => res.status(200).send({post:post}));
     }
