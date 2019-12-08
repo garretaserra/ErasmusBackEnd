@@ -11,6 +11,7 @@ userRouter.put('/unfollow',auth.optional, userScripts.unFollow);
 //Example of route that needs authentication
 userRouter.get('/user', auth.required, function (req, res){res.status(200).send({message: 'It works'})});
 userRouter.get('/usersName', auth.optional, userScripts.getUsersName);
+userRouter.get('/profile/:userId', auth.optional, userScripts.getProfile);
 userRouter.get('/search', userScripts.search);
 
 export default userRouter;
