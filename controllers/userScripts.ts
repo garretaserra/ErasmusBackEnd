@@ -28,6 +28,7 @@ exports.login = async function(req, res, next) {
             if (finalUser.validatePassword(finalUser.password)) {
                 let jwt = finalUser.generateJWT();
                 //TODO: remove fields that are not necessary for the frontend
+
                 // finalUser.hash = undefined;
                 // finalUser.salt = undefined;
                 return res.status(200).json({jwt: jwt, user: finalUser});
@@ -58,6 +59,7 @@ exports.register = async function (req, res){
 
     const finalUser = new User(user);
     finalUser.setPassword(user.password);
+    console.log("User Validation: ", finalUser.password);
     return finalUser.save()
         .then(() => res.json({ user: finalUser.toAuthJSON() }));
 };
@@ -108,4 +110,12 @@ exports.unFollow = async function (req,res) {
             return res.status(200).send({message: 'UnFollowed successfully'});
         }
     }
+};
+
+exports.search = async function(req, res) {
+    let searchString: string = req.query.searchString;
+    let pattern = new RegExp('^' + searchString);
+    await User.find({"email": pattern}).then((users=>{
+        res.status(200).json(users);
+    }));
 };
