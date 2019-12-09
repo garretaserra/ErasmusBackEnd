@@ -86,7 +86,7 @@ function eventListener() {
 /* Socket IO */
 
 //Let us define a hashMap being the key the username and the values its socketId
-let userList = {};
+let userList: Map<string, string> = new Map();
 
 //Event listener when a socket is connected
 io.on('connection', onConnection);
@@ -98,28 +98,28 @@ function onConnection(socket) {
     //Once connected, the socket is attached with a query param email
     let email: string = socket.handshake.query.email;
     //We store it in the hashMap with the corresponding socketId
-    userList[email] = socket.id;
+    userList.set(email, socket.id);
 
-    console.log(email + ": " + userList[email]);
+    console.log(userList);
 
-    io.emit('userList', userList);
+    io.emit('userList', Array.from(userList));
 
     //Private message user-to-user if both are online, otherwise store it
     socket.on('message', function (data) {
         console.log(data.message + " by " + email + " to " + data.destination);
-        if (userList[data.destination] == null) {
+        if (userList.get(data.destination)) {
             console.log('user not online');
             //TODO: store msg database
         } else {
-            io.to(userList[data.destination]).emit('message', data);
+            io.to(<string>userList.get(data.destination)).emit('message', data);
         }
     });
 
     //On a disconnection, delete its socketId from the hashMap
     socket.on('disconnect', function() {
         console.log(email + ' disconnected');
-        userList[email] = null;
-        io.emit('userList', userList);
+        userList.delete(email);
+        io.emit('userList', Array.from(userList));
     });
 }
 
