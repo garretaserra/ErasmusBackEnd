@@ -122,7 +122,7 @@ exports.updateActivity = async function(req, res) {
     if (!activity) {
         return res.status(404).send({message: 'User not found'});
     } else {
-        return res.status(404).send(activity);
+        return res.status(200).send(activity);
     }
 };
 
@@ -143,7 +143,7 @@ exports.getFollowers = async function(req, res) {
     if (!followers) {
         return res.status(404).send({message: 'User not found'});
     } else {
-        return res.status(404).send(followers);
+        return res.status(200).send(followers);
     }
 };
 
@@ -153,7 +153,7 @@ exports.getFollowing = async function(req, res) {
     if (!following) {
         return res.status(404).send({message: 'User not found'});
     } else {
-        return res.status(404).send(following);
+        return res.status(200).send(following);
     }
 };
 
@@ -163,7 +163,7 @@ exports.getPosts = async function(req, res) {
     if (!posts) {
         return res.status(404).send({message: 'User not found'});
     } else {
-        return res.status(404).send(posts);
+        return res.status(200).send(posts);
     }
 };
 
