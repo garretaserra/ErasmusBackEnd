@@ -120,11 +120,11 @@ exports.getUsersName = async function(req, res) {
 
 exports.updateActivity = async function(req, res) {
     let userId = req.params.userId;
-    let userFound = await User.findOne({_id:userId}).populate('activity', '', null, { sort: { 'modificationDate': -1 } });
-    if (!userFound) {
+    let activity = await User.findOne({ _id:userId },{ _id:0,activity:1 }).populate('activity', '', null, { sort: { 'modificationDate': -1 } });
+    if (!activity) {
         return res.status(404).send({message: 'User not found'});
     } else {
-        return res.status(404).send({activity: userFound.activity})
+        return res.status(404).send(activity);
     }
 };
 
