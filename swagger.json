@@ -107,21 +107,12 @@
         }
       }
     },
-    "/user/getUsersByEmail/{piece}": {
-      "parameters": [
-        {
-          "name": "piece",
-          "in": "path",
-          "required": true,
-          "description": "Email piece of any user ",
-          "type": "string"
-        }
-      ],
+    "/user/all": {
       "get": {
         "tags": [
           "User"
         ],
-        "summary": "Get an array of users containing piece of email",
+        "summary": "Get all users with Id and Name",
         "responses": {
           "200": {
             "description": "Success",
@@ -138,13 +129,13 @@
         }
       }
     },
-    "/user/getUserByEmail/{email}": {
+    "/user/profile/{userId}": {
       "parameters": [
         {
-          "name": "email",
+          "name": "userId",
           "in": "path",
           "required": true,
-          "description": "Email of any user",
+          "description": "Id of any user",
           "type": "string"
         }
       ],
@@ -152,13 +143,152 @@
         "tags": [
           "User"
         ],
-        "summary": "Get user by email",
+        "summary": "Get profile of any user",
         "responses": {
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/user"
+              "$ref": "#/definitions/Profile"
             }
+          },
+          "204": {
+            "description": "Empty list"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user/followers/{userId}": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "Id of any user",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get followers of any user",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ArrayOfUsers"
+            }
+          },
+          "204": {
+            "description": "Empty list"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user/following/{userId}": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "Id of any user",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get people followed by any user",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ArrayOfUsers"
+            }
+          },
+          "204": {
+            "description": "Empty list"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user/posts/{userId}": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "Id of any user",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get posts of any user",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ArrayOfPosts"
+            }
+          },
+          "204": {
+            "description": "Empty list"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user/activity/{userId}": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "Id of any user",
+          "type": "string"
+        }
+      ],
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update activity of any user",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Activity"
+            }
+          },
+          "204": {
+            "description": "Empty list"
           },
           "404": {
             "description": "User not found"
@@ -174,7 +304,7 @@
         "tags": [
           "User"
         ],
-        "description": "Follow someone",
+        "summary": "Follow someone",
         "parameters": [
           {
             "name": "Follow parameters",
@@ -204,7 +334,7 @@
         "tags": [
           "User"
         ],
-        "description": "Unfollow someone",
+        "summary": "Unfollow someone",
         "parameters": [
           {
             "name": "Unfollow parameters",
@@ -229,7 +359,7 @@
         }
       }
     },
-    "/post/newPost": {
+    "/post/": {
       "post": {
         "tags": [
           "Post"
@@ -263,6 +393,107 @@
             "description": "Internal server error"
           }
         }
+      },
+      "put": {
+        "tags": [
+          "Post"
+        ],
+        "description": "Modify any post",
+        "parameters": [
+          {
+            "name": "Post",
+            "in": "body",
+            "required": true,
+            "description": "Post information",
+            "schema": {
+              "$ref": "#/definitions/ModifyPost"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Posted succesfully",
+            "schema": {
+              "$ref": "#/definitions/comment"
+            }
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/post/comment": {
+      "post": {
+        "tags": [
+          "Post"
+        ],
+        "description": "Add a comment to a post",
+        "parameters": [
+          {
+            "name": "Comment",
+            "in": "body",
+            "required": true,
+            "description": "Comment information",
+            "schema": {
+              "$ref": "#/definitions/AddComment"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Commented succesfully",
+            "schema": {
+              "$ref": "#/definitions/comment"
+            }
+          },
+          "404": {
+            "description": "Post not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/post/{postId}": {
+      "delete": {
+        "tags": [
+          "Post"
+        ],
+        "description": "Delete any post",
+        "parameters": [
+          {
+            "name": "postId",
+            "type": "string",
+            "in": "path",
+            "required": true,
+            "description": "Post identifier"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted successfully"
+          },
+          "404": {
+            "description": "Post not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
       }
     }
   },
@@ -274,7 +505,8 @@
       ],
       "properties": {
         "email": {
-          "type": "string"
+          "type": "string",
+          "pattern": "someone@domain"
         },
         "password": {
           "type": "string"
@@ -284,7 +516,8 @@
     "Login": {
       "properties": {
         "auth": {
-          "type": "string"
+          "type": "string",
+          "pattern": "JSON Web Token"
         },
         "user": {
           "$ref": "#/definitions/user"
@@ -294,46 +527,19 @@
     "user": {
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "pattern": "Someone"
         },
         "email": {
-          "type": "string"
+          "type": "string",
+          "pattern": "someone@domain"
         },
-        "password": {
-          "type": "string"
-        },
-        "profilePhoto": {
-          "type": "string"
-        },
-        "followers": {
+        "activity": {
           "type": "array",
           "items": {
-            "type": "object",
             "properties": {
-              "email": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "following": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "posts": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
+              "post": {
+                "$ref": "#/definitions/post"
               }
             }
           }
@@ -348,40 +554,14 @@
       ],
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "pattern": "Someone"
         },
         "email": {
-          "type": "string"
+          "type": "string",
+          "pattern": "someone@domain"
         },
         "password": {
-          "type": "string"
-        }
-      }
-    },
-    "Follow": {
-      "required": [
-        "userId",
-        "followedId"
-      ],
-      "properties": {
-        "userId": {
-          "type": "string"
-        },
-        "followedId": {
-          "type": "string"
-        }
-      }
-    },
-    "UnFollow": {
-      "required": [
-        "userId",
-        "unFollowedId"
-      ],
-      "properties": {
-        "userId": {
-          "type": "string"
-        },
-        "followedId": {
           "type": "string"
         }
       }
@@ -392,16 +572,150 @@
           "type": "array",
           "items": {
             "properties": {
-              "email": {
+              "userId": {
                 "type": "string"
+              },
+              "name": {
+                "type": "string",
+                "pattern": "Someone"
               }
             }
           }
         }
       }
     },
+    "ArrayOfPosts": {
+      "properties": {
+        "posts": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "owner": {
+                "type": "string",
+                "pattern": "someone@domain"
+              },
+              "type": {
+                "type": "string",
+                "pattern": "event/post"
+              },
+              "message": {
+                "type": "string",
+                "pattern": "Hi there! What's up?"
+              },
+              "eventDate": {
+                "type": "string",
+                "pattern": "2019-12-08T18:49:46.244+00:00"
+              },
+              "modificationDate": {
+                "type": "string",
+                "pattern": "2019-12-08T18:49:46.244+00:00"
+              },
+              "members": {
+                "type": "array",
+                "items": {
+                  "properties": {
+                    "userId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "comments": {
+                "type": "array",
+                "items": {
+                  "properties": {
+                    "owner": {
+                      "type": "string",
+                      "pattern": "someone@domain"
+                    },
+                    "message": {
+                      "type": "string",
+                      "pattern": "I like your post!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Profile": {
+      "properties": {
+        "profile": {
+          "properties": {
+            "email": {
+              "type": "string",
+              "pattern": "someone@domain"
+            },
+            "name": {
+              "type": "string",
+              "pattern": "Someone"
+            },
+            "profilePhoto": {
+              "type": "string",
+              "pattern": "URL"
+            },
+            "followers": {
+              "type": "number",
+              "pattern": "400 followers"
+            },
+            "following": {
+              "type": "number",
+              "pattern": "Following 300 people"
+            },
+            "posts": {
+              "type": "number",
+              "pattern": "20 posts"
+            }
+          }
+        }
+      }
+    },
+    "Follow": {
+      "required": [
+        "auth",
+        "userId",
+        "followedId"
+      ],
+      "properties": {
+        "auth": {
+          "type": "string",
+          "pattern": "JSON Web Token"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "followedId": {
+          "type": "string"
+        }
+      }
+    },
+    "UnFollow": {
+      "required": [
+        "auth",
+        "userId",
+        "unFollowedId"
+      ],
+      "properties": {
+        "auth": {
+          "type": "string",
+          "pattern": "JSON Web Token"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "unFollowedId": {
+          "type": "string"
+        }
+      }
+    },
     "NewPost": {
       "properties": {
+        "auth": {
+          "type": "string",
+          "pattern": "JSON Web Token"
+        },
         "userId": {
           "type": "string"
         },
@@ -410,16 +724,160 @@
         }
       }
     },
+    "ModifyPost": {
+      "properties": {
+        "auth": {
+          "type": "string",
+          "pattern": "JSON Web Token"
+        },
+        "post": {
+          "$ref": "#/definitions/post"
+        }
+      }
+    },
     "post": {
+      "required": [
+        "owner",
+        "type",
+        "message",
+        "modificationDate"
+      ],
       "properties": {
         "owner": {
-          "type": "string"
+          "type": "string",
+          "pattern": "someone@domain"
         },
         "type": {
-          "type": "string"
+          "type": "string",
+          "pattern": "event/post"
         },
         "message": {
+          "type": "string",
+          "pattern": "Hi there! What's up?"
+        },
+        "eventDate": {
+          "type": "string",
+          "pattern": "2019-12-08T18:49:46.244+00:00"
+        },
+        "modificationDate": {
+          "type": "string",
+          "pattern": "2019-12-08T18:49:46.244+00:00"
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "userId": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "comments": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "owner": {
+                "type": "string",
+                "pattern": "someone@domain"
+              },
+              "message": {
+                "type": "string",
+                "pattern": "I like your post!"
+              }
+            }
+          }
+        }
+      }
+    },
+    "AddComment": {
+      "required": [
+        "auth",
+        "userId",
+        "followedId"
+      ],
+      "properties": {
+        "auth": {
+          "type": "string",
+          "pattern": "JSON Web Token"
+        },
+        "postId": {
           "type": "string"
+        },
+        "comment": {
+          "$ref": "#/definitions/comment"
+        }
+      }
+    },
+    "comment": {
+      "required": [
+        "owner",
+        "message"
+      ],
+      "properties": {
+        "owner": {
+          "type": "string",
+          "pattern": "user@domain"
+        },
+        "message": {
+          "type": "string",
+          "pattern": "I like your post!"
+        }
+      }
+    },
+    "Activity": {
+      "properties": {
+        "activity": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "owner": {
+                "type": "string",
+                "pattern": "someone@domain"
+              },
+              "type": {
+                "type": "string",
+                "pattern": "event/post"
+              },
+              "message": {
+                "type": "string",
+                "pattern": "Hi there! What's up?"
+              },
+              "eventDate": {
+                "type": "string",
+                "pattern": "2019-12-08T18:49:46.244+00:00"
+              },
+              "modificationDate": {
+                "type": "string",
+                "pattern": "2019-12-08T18:49:46.244+00:00"
+              },
+              "members": {
+                "type": "array",
+                "items": {
+                  "properties": {
+                    "userId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "comments": {
+                "type": "array",
+                "items": {
+                  "properties": {
+                    "owner": {
+                      "type": "string",
+                      "pattern": "someone@domain"
+                    },
+                    "message": {
+                      "type": "string",
+                      "pattern": "I like your post!"
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
