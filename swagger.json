@@ -182,7 +182,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/ArrayOfUsers"
+              "$ref": "#/definitions/ArrayOfFollowers"
             }
           },
           "204": {
@@ -216,7 +216,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/ArrayOfUsers"
+              "$ref": "#/definitions/ArrayOfFollowing"
             }
           },
           "204": {
@@ -569,6 +569,42 @@
     "ArrayOfUsers": {
       "properties": {
         "users": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "userId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string",
+                "pattern": "Someone"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ArrayOfFollowers": {
+      "properties": {
+        "followers": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "userId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string",
+                "pattern": "Someone"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ArrayOfFollowing": {
+      "properties": {
+        "following": {
           "type": "array",
           "items": {
             "properties": {

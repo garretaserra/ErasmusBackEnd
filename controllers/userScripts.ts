@@ -111,10 +111,9 @@ exports.unFollow = async function (req,res) {
     }
 };
 
-exports.getUsersName = async function(req, res) {
-    let users = await User.find({}, {name:1})
-    console.log(users);
-    return res.status(200).send(users);
+exports.getAll = async function(req, res) {
+    let users = await User.find({}, {name:1});
+    return res.status(200).send({users: users});
 };
 
 exports.updateActivity = async function(req, res) {
@@ -134,7 +133,7 @@ exports.getProfile = async function(req,res) {
         return res.status(404).send({message: 'User not found'});
     } else {
         let profile = new Profile(userFound._id, userFound.email, userFound.name, userFound.followers.length, userFound.following.length, userFound.posts.length);
-        return res.status(200).send(profile);
+        return res.status(200).send({profile: profile});
     }
 };
 
