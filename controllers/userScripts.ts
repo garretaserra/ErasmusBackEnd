@@ -28,7 +28,6 @@ exports.login = async function(req, res, next) {
             if (finalUser.validatePassword(finalUser.password)) {
                 let jwt = finalUser.generateJWT();
                 //TODO: remove fields that are not necessary for the frontend
-
                 // finalUser.hash = undefined;
                 // finalUser.salt = undefined;
                 return res.status(200).json({jwt: jwt, user: finalUser});
@@ -120,7 +119,7 @@ exports.getUsersName = async function(req, res) {
 
 exports.updateActivity = async function(req, res) {
     let userId = req.params.userId;
-    let activity = await User.findOne({ _id:userId },{ _id:0,activity:1 }).populate('activity', '', null, { sort: { 'modificationDate': -1 } });
+    let activity = await User.findOne({ _id:userId },{ _id:0, activity:1 }).populate('activity', '', null, { sort: { 'modificationDate': -1 } });
     if (!activity) {
         return res.status(404).send({message: 'User not found'});
     } else {
@@ -132,10 +131,40 @@ exports.getProfile = async function(req,res) {
     let userId = req.params.userId;
     let userFound = await User.findById(userId);
     if (!userFound) {
-        return res.status(404).send({message: 'User not found'})
+        return res.status(404).send({message: 'User not found'});
     } else {
         let profile = new Profile(userFound._id, userFound.email, userFound.name, userFound.followers.length, userFound.following.length, userFound.posts.length);
         return res.status(200).send(profile);
+    }
+};
+
+exports.getFollowers = async function(req, res) {
+    let userId = req.params.userId;
+    let followers = await User.findOne({ _id:userId },{ _id:0, followers:1 }).populate('followers', '_id name', null);
+    if (!followers) {
+        return res.status(404).send({message: 'User not found'});
+    } else {
+        return res.status(404).send(followers);
+    }
+};
+
+exports.getFollowing = async function(req, res) {
+    let userId = req.params.userId;
+    let following = await User.findOne({ _id:userId },{ _id:0, following:1 }).populate('following', '_id name', null);
+    if (!following) {
+        return res.status(404).send({message: 'User not found'});
+    } else {
+        return res.status(404).send(following);
+    }
+};
+
+exports.getPosts = async function(req, res) {
+    let userId = req.params.userId;
+    let posts = await User.findOne({ _id:userId },{ _id:0, posts:1 }).populate('posts', '', null, { sort: { 'modificationDate': -1 } });
+    if (!posts) {
+        return res.status(404).send({message: 'User not found'});
+    } else {
+        return res.status(404).send(posts);
     }
 };
 
