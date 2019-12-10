@@ -118,6 +118,16 @@ exports.getUsersName = async function(req, res) {
     return res.status(200).send(users);
 };
 
+exports.updateActivity = async function(req, res) {
+    let userId = req.params.userId;
+    let userFound = await User.findOne({_id:userId}).populate('activity', '', null, { sort: { 'modificationDate': -1 } });
+    if (!userFound) {
+        return res.status(404).send({message: 'User not found'});
+    } else {
+        return res.status(404).send({activity: userFound.activity})
+    }
+};
+
 exports.getProfile = async function(req,res) {
     let userId = req.params.userId;
     let userFound = await User.findById(userId);

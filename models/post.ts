@@ -7,7 +7,7 @@ const PostSchema: Schema = new Schema({
     type: { type: String, required: true },
     message: { type: String, required: true },
     eventDate: { type: Date },
-    modificationDate: { type: Date, default: Date.now},
+    modificationDate: { type: Date, default: Date.now()},
     members: { type: Schema.ObjectId, ref: 'User', unique: false },
     comments: [{
         owner: String,
