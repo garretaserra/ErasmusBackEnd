@@ -4,6 +4,7 @@ let auth = require('./auth');
 
 let postScripts = require('./../controllers/postScripts');
 
-postRouter.post('/newPost', auth.optional, postScripts.newPost);
+postRouter.post('', auth.optional, postScripts.newPost);
+postRouter.delete('/:postId', auth.optional, postScripts.deletePost);
 
 export default postRouter;

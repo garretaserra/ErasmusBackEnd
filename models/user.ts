@@ -9,7 +9,6 @@ const UserSchema: Schema = new Schema({
     name: { type: String},
     hash: { type: String},
     salt: { type: String},
-    password: {type: String},
     profilePhoto: String,
     followers: [{ type: Schema.ObjectId, ref: 'User', unique: false }], //Gente que me sigue a mí
     following: [{ type: Schema.ObjectId, ref: 'User', unique: false }], //Gente a la que yo sigo
@@ -41,11 +40,9 @@ UserSchema.methods.generateJWT = function() {
 
 UserSchema.methods.toAuthJSON = function() {
     return {
-        user: {
-            _id: this._id,
-            name: this.name,
-            email: this.email
-        }
+        _id: this._id,
+        name: this.name,
+        email: this.email
     };
 };
 
