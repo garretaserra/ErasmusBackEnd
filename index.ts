@@ -2,7 +2,6 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import swaggerUi from 'swagger-ui-express'
 import router from './routes/index';
-import {Socket} from "socket.io";
 
 let swaggerDocument = require('./swagger');
 let mongoose = require('mongoose');
@@ -87,7 +86,7 @@ function eventListener() {
 /* Socket IO */
 
 //Let us define a hashMap being the key the username and the values its socketId
-let userList = {};
+let userList: Map<string, string> = new Map();
 
 //Event listener when a socket is connected
 io.on('connection', onConnection);
@@ -96,28 +95,31 @@ function onConnection(socket) {
 
     console.log('a user connected');
 
-    //Once connected, the socket is attached with a query param name
-    let username: string = socket.handshake.query.name;
+    //Once connected, the socket is attached with a query param email
+    let email: string = socket.handshake.query.email;
     //We store it in the hashMap with the corresponding socketId
-    userList[username] = socket.id;
+    userList.set(email, socket.id);
 
-    console.log(username + ": " + userList[username]);
+    console.log(userList);
+
+    io.emit('userList', Array.from(userList));
 
     //Private message user-to-user if both are online, otherwise store it
     socket.on('message', function (data) {
-        console.log(data.message + " by " + username + " to " + data.destination);
-        if (userList[data.destination] == null) {
+        console.log(data.message + " by " + email + " to " + data.destination);
+        if (userList.get(data.destination)) {
             console.log('user not online');
             //TODO: store msg database
         } else {
-            io.to(userList[data.destination]).emit('message', data);
+            io.to(<string>userList.get(data.destination)).emit('message', data);
         }
     });
 
     //On a disconnection, delete its socketId from the hashMap
     socket.on('disconnect', function() {
-        console.log(username + ' disconnected');
-        userList[username] = null;
+        console.log(email + ' disconnected');
+        userList.delete(email);
+        io.emit('userList', Array.from(userList));
     });
 }
 
