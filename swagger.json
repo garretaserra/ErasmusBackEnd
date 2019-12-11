@@ -37,7 +37,7 @@
         "tags": [
           "Auth"
         ],
-        "description": "Log in any user",
+        "summary": "Login any user to Erasmus",
         "parameters": [
           {
             "name": "Credentials",
@@ -56,7 +56,7 @@
           "200": {
             "description": "User logged in",
             "schema": {
-              "$ref": "#/definitions/Login"
+              "$ref": "#/definitions/AuthUser"
             }
           },
           "401": {
@@ -76,15 +76,15 @@
         "tags": [
           "Auth"
         ],
-        "description": "Create new user",
+        "summary": "Register any user to Erasmus",
         "parameters": [
           {
-            "name": "Register fields",
+            "name": "Registry fields",
             "in": "body",
             "required": true,
             "description": "User that you want to add",
             "schema": {
-              "$ref": "#/definitions/Register"
+              "$ref": "#/definitions/Registry"
             }
           }
         ],
@@ -95,7 +95,7 @@
           "200": {
             "description": "User created successfully",
             "schema": {
-              "$ref": "#/definitions/Login"
+              "$ref": "#/definitions/AuthUser"
             }
           },
           "409": {
@@ -113,6 +113,17 @@
           "User"
         ],
         "summary": "Get all users with Id and Name",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -130,20 +141,29 @@
       }
     },
     "/user/profile/{userId}": {
-      "parameters": [
-        {
-          "name": "userId",
-          "in": "path",
-          "required": true,
-          "description": "Id of any user",
-          "type": "string"
-        }
-      ],
       "get": {
         "tags": [
           "User"
         ],
-        "summary": "Get profile of any user",
+        "summary": "Get the profile of any user",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "Id of any user",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -154,9 +174,6 @@
           "204": {
             "description": "Empty list"
           },
-          "404": {
-            "description": "User not found"
-          },
           "500": {
             "description": "Internal server error"
           }
@@ -164,20 +181,29 @@
       }
     },
     "/user/followers/{userId}": {
-      "parameters": [
-        {
-          "name": "userId",
-          "in": "path",
-          "required": true,
-          "description": "Id of any user",
-          "type": "string"
-        }
-      ],
       "get": {
         "tags": [
           "User"
         ],
         "summary": "Get followers of any user",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "Id of any user",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -198,20 +224,29 @@
       }
     },
     "/user/following/{userId}": {
-      "parameters": [
-        {
-          "name": "userId",
-          "in": "path",
-          "required": true,
-          "description": "Id of any user",
-          "type": "string"
-        }
-      ],
       "get": {
         "tags": [
           "User"
         ],
         "summary": "Get people followed by any user",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "Id of any user",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -232,20 +267,29 @@
       }
     },
     "/user/posts/{userId}": {
-      "parameters": [
-        {
-          "name": "userId",
-          "in": "path",
-          "required": true,
-          "description": "Id of any user",
-          "type": "string"
-        }
-      ],
       "get": {
         "tags": [
           "User"
         ],
         "summary": "Get posts of any user",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "Id of any user",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -266,20 +310,29 @@
       }
     },
     "/user/activity/{userId}": {
-      "parameters": [
-        {
-          "name": "userId",
-          "in": "path",
-          "required": true,
-          "description": "Id of any user",
-          "type": "string"
-        }
-      ],
       "put": {
         "tags": [
           "User"
         ],
         "summary": "Update activity of any user",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "Id of any user",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -306,6 +359,12 @@
         ],
         "summary": "Follow someone",
         "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
           {
             "name": "Follow parameters",
             "in": "body",
@@ -337,6 +396,12 @@
         "summary": "Unfollow someone",
         "parameters": [
           {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
+          {
             "name": "Unfollow parameters",
             "in": "body",
             "required": true,
@@ -359,20 +424,26 @@
         }
       }
     },
-    "/post/": {
+    "/post": {
       "post": {
         "tags": [
           "Post"
         ],
-        "description": "Add new post",
+        "summary": "Add new post",
         "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
           {
             "name": "Post",
             "in": "body",
             "required": true,
             "description": "Post information",
             "schema": {
-              "$ref": "#/definitions/NewPost"
+              "$ref": "#/definitions/newPost"
             }
           }
         ],
@@ -383,7 +454,7 @@
           "200": {
             "description": "Posted succesfully",
             "schema": {
-              "$ref": "#/definitions/post"
+              "$ref": "#/definitions/postReceived"
             }
           },
           "404": {
@@ -398,15 +469,21 @@
         "tags": [
           "Post"
         ],
-        "description": "Modify any post",
+        "summary": "Modify any post",
         "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
           {
             "name": "Post",
             "in": "body",
             "required": true,
             "description": "Post information",
             "schema": {
-              "$ref": "#/definitions/ModifyPost"
+              "$ref": "#/definitions/modifyPost"
             }
           }
         ],
@@ -415,9 +492,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Posted succesfully",
+            "description": "Modified succesfully",
             "schema": {
-              "$ref": "#/definitions/comment"
+              "$ref": "#/definitions/postReceived"
             }
           },
           "404": {
@@ -434,8 +511,14 @@
         "tags": [
           "Post"
         ],
-        "description": "Add a comment to a post",
+        "summary": "Add a comment to a post",
         "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
           {
             "name": "Comment",
             "in": "body",
@@ -453,7 +536,7 @@
           "200": {
             "description": "Commented succesfully",
             "schema": {
-              "$ref": "#/definitions/comment"
+              "$ref": "#/definitions/Comment"
             }
           },
           "404": {
@@ -470,8 +553,14 @@
         "tags": [
           "Post"
         ],
-        "description": "Delete any post",
+        "summary": "Delete any post",
         "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "type": "string",
+            "required": true
+          },
           {
             "name": "postId",
             "type": "string",
@@ -513,40 +602,85 @@
         }
       }
     },
-    "Login": {
+    "AuthUser": {
       "properties": {
-        "auth": {
+        "jwt": {
           "type": "string",
           "pattern": "JSON Web Token"
         },
         "user": {
-          "$ref": "#/definitions/user"
-        }
-      }
-    },
-    "user": {
-      "properties": {
-        "name": {
-          "type": "string",
-          "pattern": "Someone"
-        },
-        "email": {
-          "type": "string",
-          "pattern": "someone@domain"
-        },
-        "activity": {
-          "type": "array",
-          "items": {
-            "properties": {
-              "post": {
-                "$ref": "#/definitions/post"
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string",
+              "pattern": "Someone"
+            },
+            "email": {
+              "type": "string",
+              "pattern": "someone@domain"
+            },
+            "activity": {
+              "type": "array",
+              "items": {
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "owner": {
+                    "type": "string",
+                    "pattern": "someone@domain"
+                  },
+                  "type": {
+                    "type": "string",
+                    "pattern": "event/post"
+                  },
+                  "message": {
+                    "type": "string",
+                    "pattern": "Hi there! What's up?"
+                  },
+                  "eventDate": {
+                    "type": "string",
+                    "pattern": "2019-12-08T18:49:46.244+00:00"
+                  },
+                  "modificationDate": {
+                    "type": "string",
+                    "pattern": "2019-12-08T18:49:46.244+00:00"
+                  },
+                  "members": {
+                    "type": "array",
+                    "items": {
+                      "properties": {
+                        "userId": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "comments": {
+                    "type": "array",
+                    "items": {
+                      "properties": {
+                        "owner": {
+                          "type": "string",
+                          "pattern": "someone@domain"
+                        },
+                        "message": {
+                          "type": "string",
+                          "pattern": "I like your post!"
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
         }
       }
     },
-    "Register": {
+    "Registry": {
       "required": [
         "name",
         "email",
@@ -579,6 +713,41 @@
                 "type": "string",
                 "pattern": "Someone"
               }
+            }
+          }
+        }
+      }
+    },
+    "Profile": {
+      "properties": {
+        "profile": {
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string",
+              "pattern": "someone@domain"
+            },
+            "name": {
+              "type": "string",
+              "pattern": "Someone"
+            },
+            "profilePhoto": {
+              "type": "string",
+              "pattern": "URL"
+            },
+            "followers": {
+              "type": "number",
+              "pattern": "400 followers"
+            },
+            "following": {
+              "type": "number",
+              "pattern": "Following 300 people"
+            },
+            "posts": {
+              "type": "number",
+              "pattern": "20 posts"
             }
           }
         }
@@ -676,191 +845,6 @@
         }
       }
     },
-    "Profile": {
-      "properties": {
-        "profile": {
-          "properties": {
-            "email": {
-              "type": "string",
-              "pattern": "someone@domain"
-            },
-            "name": {
-              "type": "string",
-              "pattern": "Someone"
-            },
-            "profilePhoto": {
-              "type": "string",
-              "pattern": "URL"
-            },
-            "followers": {
-              "type": "number",
-              "pattern": "400 followers"
-            },
-            "following": {
-              "type": "number",
-              "pattern": "Following 300 people"
-            },
-            "posts": {
-              "type": "number",
-              "pattern": "20 posts"
-            }
-          }
-        }
-      }
-    },
-    "Follow": {
-      "required": [
-        "auth",
-        "userId",
-        "followedId"
-      ],
-      "properties": {
-        "auth": {
-          "type": "string",
-          "pattern": "JSON Web Token"
-        },
-        "userId": {
-          "type": "string"
-        },
-        "followedId": {
-          "type": "string"
-        }
-      }
-    },
-    "UnFollow": {
-      "required": [
-        "auth",
-        "userId",
-        "unFollowedId"
-      ],
-      "properties": {
-        "auth": {
-          "type": "string",
-          "pattern": "JSON Web Token"
-        },
-        "userId": {
-          "type": "string"
-        },
-        "unFollowedId": {
-          "type": "string"
-        }
-      }
-    },
-    "NewPost": {
-      "properties": {
-        "auth": {
-          "type": "string",
-          "pattern": "JSON Web Token"
-        },
-        "userId": {
-          "type": "string"
-        },
-        "post": {
-          "$ref": "#/definitions/post"
-        }
-      }
-    },
-    "ModifyPost": {
-      "properties": {
-        "auth": {
-          "type": "string",
-          "pattern": "JSON Web Token"
-        },
-        "post": {
-          "$ref": "#/definitions/post"
-        }
-      }
-    },
-    "post": {
-      "required": [
-        "owner",
-        "type",
-        "message",
-        "modificationDate"
-      ],
-      "properties": {
-        "owner": {
-          "type": "string",
-          "pattern": "someone@domain"
-        },
-        "type": {
-          "type": "string",
-          "pattern": "event/post"
-        },
-        "message": {
-          "type": "string",
-          "pattern": "Hi there! What's up?"
-        },
-        "eventDate": {
-          "type": "string",
-          "pattern": "2019-12-08T18:49:46.244+00:00"
-        },
-        "modificationDate": {
-          "type": "string",
-          "pattern": "2019-12-08T18:49:46.244+00:00"
-        },
-        "members": {
-          "type": "array",
-          "items": {
-            "properties": {
-              "userId": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "comments": {
-          "type": "array",
-          "items": {
-            "properties": {
-              "owner": {
-                "type": "string",
-                "pattern": "someone@domain"
-              },
-              "message": {
-                "type": "string",
-                "pattern": "I like your post!"
-              }
-            }
-          }
-        }
-      }
-    },
-    "AddComment": {
-      "required": [
-        "auth",
-        "userId",
-        "followedId"
-      ],
-      "properties": {
-        "auth": {
-          "type": "string",
-          "pattern": "JSON Web Token"
-        },
-        "postId": {
-          "type": "string"
-        },
-        "comment": {
-          "$ref": "#/definitions/comment"
-        }
-      }
-    },
-    "comment": {
-      "required": [
-        "owner",
-        "message"
-      ],
-      "properties": {
-        "owner": {
-          "type": "string",
-          "pattern": "user@domain"
-        },
-        "message": {
-          "type": "string",
-          "pattern": "I like your post!"
-        }
-      }
-    },
     "Activity": {
       "properties": {
         "activity": {
@@ -912,6 +896,271 @@
                   }
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    "Follow": {
+      "required": [
+        "userId",
+        "followedId"
+      ],
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "followedId": {
+          "type": "string"
+        }
+      }
+    },
+    "UnFollow": {
+      "required": [
+        "userId",
+        "unFollowedId"
+      ],
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "followedId": {
+          "type": "string"
+        }
+      }
+    },
+    "newPost": {
+      "required": [
+        "userId",
+        "Post"
+      ],
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "post": {
+          "required": [
+            "owner",
+            "type",
+            "message",
+            "modificationDate"
+          ],
+          "properties": {
+            "owner": {
+              "type": "string",
+              "pattern": "someone@domain"
+            },
+            "type": {
+              "type": "string",
+              "pattern": "event/post"
+            },
+            "message": {
+              "type": "string",
+              "pattern": "Hi there! What's up?"
+            },
+            "eventDate": {
+              "type": "string",
+              "pattern": "2019-12-08T18:49:46.244+00:00"
+            },
+            "modificationDate": {
+              "type": "string",
+              "pattern": "2019-12-08T18:49:46.244+00:00"
+            },
+            "members": {
+              "type": "array",
+              "items": {
+                "properties": {
+                  "userId": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "comments": {
+              "type": "array",
+              "items": {
+                "properties": {
+                  "owner": {
+                    "type": "string",
+                    "pattern": "someone@domain"
+                  },
+                  "message": {
+                    "type": "string",
+                    "pattern": "I like your post!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "modifyPost": {
+      "required": [
+        "Post"
+      ],
+      "properties": {
+        "post": {
+          "required": [
+            "id",
+            "owner",
+            "type",
+            "message",
+            "modificationDate"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string",
+              "pattern": "someone@domain"
+            },
+            "type": {
+              "type": "string",
+              "pattern": "event/post"
+            },
+            "message": {
+              "type": "string",
+              "pattern": "Hi there! What's up?"
+            },
+            "eventDate": {
+              "type": "string",
+              "pattern": "2019-12-08T18:49:46.244+00:00"
+            },
+            "modificationDate": {
+              "type": "string",
+              "pattern": "2019-12-08T18:49:46.244+00:00"
+            },
+            "members": {
+              "type": "array",
+              "items": {
+                "properties": {
+                  "userId": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "comments": {
+              "type": "array",
+              "items": {
+                "properties": {
+                  "owner": {
+                    "type": "string",
+                    "pattern": "someone@domain"
+                  },
+                  "message": {
+                    "type": "string",
+                    "pattern": "I like your post!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "postReceived": {
+      "properties": {
+        "post": {
+          "required": [
+            "id",
+            "owner",
+            "type",
+            "message",
+            "modificationDate"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string",
+              "pattern": "someone@domain"
+            },
+            "type": {
+              "type": "string",
+              "pattern": "event/post"
+            },
+            "message": {
+              "type": "string",
+              "pattern": "Hi there! What's up?"
+            },
+            "eventDate": {
+              "type": "string",
+              "pattern": "2019-12-08T18:49:46.244+00:00"
+            },
+            "modificationDate": {
+              "type": "string",
+              "pattern": "2019-12-08T18:49:46.244+00:00"
+            },
+            "members": {
+              "type": "array",
+              "items": {
+                "properties": {
+                  "userId": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "comments": {
+              "type": "array",
+              "items": {
+                "properties": {
+                  "owner": {
+                    "type": "string",
+                    "pattern": "someone@domain"
+                  },
+                  "message": {
+                    "type": "string",
+                    "pattern": "I like your post!"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "AddComment": {
+      "required": [
+        "postId",
+        "comment"
+      ],
+      "properties": {
+        "postId": {
+          "type": "string"
+        },
+        "comment": {
+          "properties": {
+            "owner": {
+              "type": "string",
+              "pattern": "user@domain"
+            },
+            "message": {
+              "type": "string",
+              "pattern": "I like your post!"
+            }
+          }
+        }
+      }
+    },
+    "Comment": {
+      "required": [
+        "comment"
+      ],
+      "properties": {
+        "comment": {
+          "properties": {
+            "owner": {
+              "type": "string",
+              "pattern": "user@domain"
+            },
+            "message": {
+              "type": "string",
+              "pattern": "I like your post!"
             }
           }
         }

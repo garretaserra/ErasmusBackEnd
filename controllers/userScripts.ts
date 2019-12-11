@@ -1,11 +1,12 @@
 'use strict';
+
+import { Request, Response } from 'express';
 import User from '../models/user';
 import Profile from '../models/profile';
+import AuthUser from "../models/authUser";
 
 exports.login = async function(req, res, next) {
-    const user = req.body;
-    console.log("user:", req.body);
-
+    let user = req.body;
     if(!user.email) {
         return res.status(422).json({
             errors: {
@@ -20,26 +21,23 @@ exports.login = async function(req, res, next) {
             },
         });
     }
-
-    await User.findOne({email: user.email}).populate('followers').populate('following').populate('posts').populate('activity').then((data)=> {
-            let finalUser = data;
-            if (!finalUser)
-                return res.status(400).send('Not found');
-            if (finalUser.validatePassword(finalUser.password)) {
-                let jwt = finalUser.generateJWT();
-                //TODO: remove fields that are not necessary for the frontend
-                // finalUser.hash = undefined;
-                // finalUser.salt = undefined;
-                return res.status(200).json({jwt: jwt, user: finalUser});
-            }
+    let foundUser = await User.findOne({email: user.email}).populate('activity');
+    if (!foundUser)
+        return res.status(400).send('User not found');
+    else{
+        if(foundUser.validatePassword(user.password)){
+            let jwt = foundUser.generateJWT();
+            let finalUser = new AuthUser(foundUser._id,foundUser.name,foundUser.email,foundUser.activity);
+            return res.status(200).json({jwt: jwt, user: finalUser});
         }
-    );
+        else {
+            return res.status(401).send('Bad password');
+        }
+    }
 };
 
 exports.register = async function (req, res){
-    const user = req.body;
-    console.log("user:", req.body);
-
+    let user = req.body;
     if(!user.email) {
         return res.status(422).json({
             errors: {
@@ -54,13 +52,17 @@ exports.register = async function (req, res){
             },
         });
     }
-    //TODO: Add name validation
-
-    const finalUser = new User(user);
-    finalUser.setPassword(user.password);
-    console.log("User Validation: ", finalUser.password);
-    return finalUser.save()
-        .then(() => res.json({ user: finalUser.toAuthJSON() }));
+    let foundUser = await User.findOne({email:user.email});
+    if(foundUser) return res.status(409).json({message: "Existant User"});
+    else {
+        let newUser = new User(user);
+        newUser.setPassword(user.password);
+        return newUser.save()
+            .then(() => res.status(200).json({
+                jwt: newUser.generateJWT(),
+                user: newUser.toAuthJSON()
+            }));
+    }
 };
 
 exports.follow = async function (req,res) {
