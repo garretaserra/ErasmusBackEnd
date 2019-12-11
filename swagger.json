@@ -924,7 +924,7 @@
         "userId": {
           "type": "string"
         },
-        "unFollowedId": {
+        "followedId": {
           "type": "string"
         }
       }
