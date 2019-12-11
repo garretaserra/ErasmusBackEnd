@@ -1,5 +1,3 @@
-import {Post} from "../../ErasmusApp/src/app/models/post";
-
 class AuthUser {
     _id: string;
     email: string;
