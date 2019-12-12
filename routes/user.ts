@@ -1,4 +1,5 @@
 import express = require('express');
+import user from "../models/user";
 export let userRouter: express.Router = express.Router();
 
 let userScripts = require('./../controllers/userScripts');
@@ -18,4 +19,3 @@ userRouter.get('/posts/:userId', auth.optional, userScripts.getPosts);
 userRouter.get('/search', userScripts.search);
 
 export default userRouter;
-
