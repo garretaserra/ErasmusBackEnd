@@ -114,7 +114,7 @@ exports.unFollow = async function (req,res) {
 
 exports.getAll = async function(req, res) {
     let users = await User.find({}, {name:1});
-    return res.status(200).send({users: users});
+    return res.status(200).send(users);
 };
 
 exports.updateActivity = async function(req, res) {
