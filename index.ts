@@ -23,7 +23,7 @@ if(env == 'local') {
 }
 else {
     console.log("Despliegue en producción");
-    MONGO_URI = 'mongodb://root:root@mongo:27017/erasmus';
+    MONGO_URI = 'mongodb://root:root@mongo:27017/erasmus?authSource=admin';
 }
 
 
