@@ -19,7 +19,7 @@ let MONGO_URI : string = '';
 let env = process.argv[2];
 if(env == 'local') {
     console.log("Despliegue local");
-    MONGO_URI = 'mongodb://root:root@localhost:27017/erasmus';
+    MONGO_URI = 'mongodb://localhost:27017/erasmus';
 }
 else {
     console.log("Despliegue en producción");
