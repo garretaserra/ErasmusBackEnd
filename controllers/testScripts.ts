@@ -15,10 +15,12 @@ exports.postSth = async function (req,res){
     switch (body.type) {
         case 'Post':
             let message = new Post(body);
+            message.modificationDate = Date.now();
             message.save();
             return res.status(200).send(message);
         case 'Event':
             let event = new Evento(body);
+            event.modificationDate = Date.now();
             event.save();
             return res.status(200).send(event);
     }
