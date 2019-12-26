@@ -5,8 +5,9 @@ import router from './routes/index';
 
 let swaggerDocument = require('./swagger');
 let mongoose = require('mongoose');
+
 require('./models/user');
-require('./models/post');
+require('./models/base');
 
 const port: number = 3000;
 const app: express.Application = express();

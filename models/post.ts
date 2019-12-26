@@ -1,18 +1,13 @@
+export {};
 let mongoose = require('mongoose');
+let Base = require('./base');
 
-import {Schema,model} from 'mongoose'
+let Post = Base.discriminator('Post', new mongoose.Schema({
+        comments: [{
+            owner: String,
+            comment: String
+        }]
+    }),
+);
 
-const PostSchema: Schema = new Schema({
-    owner: { type: String, required: true},
-    type: { type: String, required: true },
-    message: { type: String, required: true },
-    eventDate: { type: Date },
-    modificationDate: { type: Date, default: Date.now()},
-    members: { type: Schema.ObjectId, ref: 'User', unique: false },
-    comments: [{
-        owner: String,
-        comment: String
-    }]
-});
-
-export default model('Post', PostSchema);
+module.exports = mongoose.model('Post');

@@ -1,9 +1,9 @@
 import express = require('express');
-let router: express.Router = express.Router();
-
+export let testRouter: express.Router = express.Router();
 let testScripts = require('../controllers/testScripts');
 
-router.get('/get', testScripts.test);
-router.post('/post', testScripts.add);
+testRouter.get('/get', testScripts.test);
+testRouter.post('/post', testScripts.postSth);
+testRouter.get('/posts/:userId', testScripts.getPosts);
 
-module.exports = router;
+export default testRouter;

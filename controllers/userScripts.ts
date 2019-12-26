@@ -3,6 +3,7 @@
 import User from '../models/user';
 import Profile from '../models/profile';
 import AuthUser from "../models/authUser";
+let Base = require('../models/base');
 
 exports.login = async function(req, res, next) {
     let user = req.body;
@@ -119,11 +120,19 @@ exports.getAll = async function(req, res) {
 
 exports.updateActivity = async function(req, res) {
     let userId = req.params.userId;
-    let activity = await User.findOne({ _id:userId },{ _id:0, activity:1 }).populate('activity', '', null, { sort: { 'modificationDate': -1 } });
-    if (!activity) {
+    let userFound = await User.findOne({_id:userId});
+    if (!userFound) {
         return res.status(404).send({message: 'User not found'});
     } else {
-        return res.status(200).send(activity);
+        let fetch = new Array<any>();
+        userFound.following.forEach(following => fetch.push(following));
+        fetch.push(userId);
+        let result = await Base.find({owner_id: {$in:fetch}}).sort( {modificationDate: -1 }).limit(10);
+        if(result.length==0) {
+            return res.status(204).send({message:'Empty list'});
+        } else {
+            return res.status(200).send({activity: result});
+        }
     }
 };
 
