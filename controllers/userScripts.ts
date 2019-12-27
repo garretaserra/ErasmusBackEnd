@@ -2,7 +2,9 @@
 
 import User from '../models/user';
 import Profile from '../models/profile';
-import AuthUser from "../models/authUser";
+import AuthUser from '../models/authUser';
+let Post = require('../models/post');
+let Event = require('../models/event');
 let Base = require('../models/base');
 
 exports.login = async function(req, res, next) {
@@ -69,8 +71,6 @@ exports.follow = async function (req,res) {
     let userId = req.body.userId;
     let followedId = req.body.followedId;
 
-    console.log(`User --> ${userId}, StartedFollowing --> ${followedId}`);
-
     let userFound = await User.findById(userId);
 
     if (!userFound) {
@@ -91,8 +91,6 @@ exports.follow = async function (req,res) {
 exports.unFollow = async function (req,res) {
     let userId = req.body.userId;
     let followedId = req.body.followedId;
-
-    console.log(`User --> ${userId}, StopFollowing --> ${followedId}`);
 
     let userFound = await User.findById(userId);
 
@@ -120,6 +118,7 @@ exports.getAll = async function(req, res) {
 
 exports.updateActivity = async function(req, res) {
     let userId = req.params.userId;
+    let slice = +req.params.slice;
     let userFound = await User.findOne({_id:userId});
     if (!userFound) {
         return res.status(404).send({message: 'User not found'});
@@ -127,7 +126,7 @@ exports.updateActivity = async function(req, res) {
         let fetch = new Array<any>();
         userFound.following.forEach(following => fetch.push(following));
         fetch.push(userId);
-        let result = await Base.find({owner_id: {$in:fetch}}).sort( {modificationDate: -1 }).limit(10);
+        let result = await Base.find({owner_id: {$in:fetch}}).sort( {modificationDate: -1 }).skip(slice).limit(10);
         if(result.length==0) {
             return res.status(204).send({message:'Empty list'});
         } else {
@@ -142,7 +141,9 @@ exports.getProfile = async function(req,res) {
     if (!userFound) {
         return res.status(404).send({message: 'User not found'});
     } else {
-        let profile = new Profile(userFound._id, userFound.email, userFound.name, userFound.followers.length, userFound.following.length, userFound.posts.length);
+        let posts = await Post.count({owner_id: userId});
+        let events = await Event.count({owner_id: userId});
+        let profile = new Profile(userFound._id, userFound.email, userFound.name, userFound.followers.length, userFound.following.length, posts, events);
         return res.status(200).send({profile: profile});
     }
 };
@@ -169,11 +170,23 @@ exports.getFollowing = async function(req, res) {
 
 exports.getPosts = async function(req, res) {
     let userId = req.params.userId;
-    let posts = await User.findOne({ _id:userId },{ _id:0, posts:1 }).populate('posts', '', null, { sort: { 'modificationDate': -1 } });
+    let slice = +req.params.slice;
+    let posts = await Post.find({owner_id: userId}).sort( {modificationDate: -1 }).skip(slice).limit(10);
     if (!posts) {
         return res.status(404).send({message: 'User not found'});
     } else {
         return res.status(200).send(posts);
+    }
+};
+
+exports.getEvents = async function(req, res) {
+    let userId = req.params.userId;
+    let slice = +req.params.slice;
+    let events = await Event.find({owner_id: userId}).sort( {modificationDate: -1 }).skip(slice).limit(10);
+    if (!events) {
+        return res.status(404).send({message: 'User not found'});
+    } else {
+        return res.status(200).send(events);
     }
 };
 

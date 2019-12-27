@@ -11,11 +11,12 @@ userRouter.put('/follow', auth.optional, userScripts.follow);
 userRouter.put('/unfollow',auth.optional, userScripts.unFollow);
 userRouter.get('/user', auth.required, function (req, res){res.status(200).send({message: 'It works'})});
 userRouter.get('/all', auth.optional, userScripts.getAll);
-userRouter.put('/activity/:userId', auth.optional, userScripts.updateActivity);
+userRouter.put('/activity/:userId/:slice', auth.optional, userScripts.updateActivity);
 userRouter.get('/profile/:userId', auth.optional, userScripts.getProfile);
 userRouter.get('/followers/:userId', auth.optional, userScripts.getFollowers);
 userRouter.get('/following/:userId', auth.optional, userScripts.getFollowing);
-userRouter.get('/posts/:userId', auth.optional, userScripts.getPosts);
+userRouter.get('/posts/:userId/:slice', auth.optional, userScripts.getPosts);
+userRouter.get('/events/:userId/:slice', auth.optional, userScripts.getEvents);
 userRouter.get('/search', userScripts.search);
 
 export default userRouter;

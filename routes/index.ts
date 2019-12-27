@@ -2,7 +2,8 @@ import { Router } from 'express';
 
 import {userRouter} from './user';
 import {postRouter} from './post';
-import {testRouter} from "./test";
+import {testRouter} from './test';
+import {eventRouter} from './event';
 
 let auth = require('./auth');
 
@@ -10,6 +11,7 @@ const router: Router = Router();
 
 router.use('/user', auth.optional, userRouter);
 router.use('/post', auth.optional, postRouter);
-router.use('/test', auth.optional, testRouter)
+router.use('/event', auth.optional, eventRouter);
+router.use('/test', auth.optional, testRouter);
 
 export default router;
