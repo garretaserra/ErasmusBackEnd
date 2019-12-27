@@ -77,7 +77,6 @@ exports.follow = async function (req,res) {
         return res.status(404).send({message: 'User not found'})
     } else {
         let followedFound = await User.findById(followedId);
-        console.log(followedFound.posts);
         if (!followedFound) {
             return res.status(404).send({message: 'Followed not found'})
         } else {
@@ -141,8 +140,8 @@ exports.getProfile = async function(req,res) {
     if (!userFound) {
         return res.status(404).send({message: 'User not found'});
     } else {
-        let posts = await Post.count({owner_id: userId});
-        let events = await Event.count({owner_id: userId});
+        let posts = await Post.countDocuments({owner_id: userId});
+        let events = await Event.countDocuments({owner_id: userId});
         let profile = new Profile(userFound._id, userFound.email, userFound.name, userFound.followers.length, userFound.following.length, posts, events);
         return res.status(200).send({profile: profile});
     }
@@ -175,7 +174,7 @@ exports.getPosts = async function(req, res) {
     if (!posts) {
         return res.status(404).send({message: 'User not found'});
     } else {
-        return res.status(200).send(posts);
+        return res.status(200).send({posts:posts});
     }
 };
 
@@ -186,7 +185,7 @@ exports.getEvents = async function(req, res) {
     if (!events) {
         return res.status(404).send({message: 'User not found'});
     } else {
-        return res.status(200).send(events);
+        return res.status(200).send({events:events});
     }
 };
 
@@ -196,4 +195,16 @@ exports.search = async function(req, res) {
     await User.find({"email": pattern}).then((users=>{
         res.status(200).json(users);
     }));
+};
+
+exports.dropOut = async function (req, res) {
+    let userId = req.params.userId;
+    let userFound = await User.findByIdAndDelete(userId);
+    if(!userFound){
+        return res.status(404).send({message: 'User not found'});
+    } else {
+        await User.updateMany({}, {$pull: {followers: userId, following: userId}}, {multi: true});
+        await Base.deleteMany({owner_id:userId}, {multi: true});
+        return res.status(200).send({message: 'Dropped out successfully'});
+    }
 };
