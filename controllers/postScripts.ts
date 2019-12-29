@@ -4,7 +4,6 @@ let Post = require('../models/post');
 
 exports.newPost = async function(req, res, next) {
     let post = req.body.post;
-
     let userFound = await User.findById(post.owner_id);
 
     if (!userFound) {
