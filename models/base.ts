@@ -7,9 +7,8 @@ let baseOptions = {
 };
 
 let Base = mongoose.model('Base', new mongoose.Schema({
-        owner_id: { type: mongoose.Schema.ObjectId, ref: 'User' ,required: true},
+        owner: { type: mongoose.Schema.ObjectId, ref: 'User' ,required: true},
         type: { type: String, required: true },
-        description: { type: String, required: true },
         modificationDate: { type: Date }
         }, baseOptions,
     ),
