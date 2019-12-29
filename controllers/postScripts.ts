@@ -3,9 +3,9 @@ import User from '../models/user';
 let Post = require('../models/post');
 
 exports.newPost = async function(req, res, next) {
+    console.log('req: ', req.body);
     let post = req.body.post;
-
-    let userFound = await User.findById(post.owner_id);
+    let userFound = await User.findById(post.owner);
 
     if (!userFound) {
         return res.status(404).send({message: 'User not found'})
