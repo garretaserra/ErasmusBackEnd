@@ -23,9 +23,9 @@ exports.login = async function(req, res, next) {
             },
         });
     }
-    let foundUser = await User.findOne({email: user.email}).populate('activity');
+    let foundUser = await User.findOne({email: user.email});
     if (!foundUser)
-        return res.status(400).send('User not found');
+        return res.status(404).send('User not found');
     else{
         if(foundUser.validatePassword(user.password)){
             let jwt = foundUser.generateJWT();
@@ -64,6 +64,24 @@ exports.register = async function (req, res){
                 jwt: newUser.generateJWT(),
                 user: newUser.toAuthJSON()
             }));
+    }
+};
+
+exports.getAll = async function(req, res) {
+    let users = await User.find({}, {name:1});
+    return res.status(200).send(users);
+};
+
+exports.getProfile = async function(req,res) {
+    let userId = req.params.userId;
+    let userFound = await User.findById(userId);
+    if (!userFound) {
+        return res.status(404).send({message: 'User not found'});
+    } else {
+        let posts = await Post.countDocuments({owner_id: userId});
+        let events = await Event.countDocuments({owner_id: userId});
+        let profile = new Profile(userFound._id, userFound.email, userFound.name, userFound.followers.length, userFound.following.length, posts, events);
+        return res.status(200).send({profile: profile});
     }
 };
 
@@ -110,11 +128,6 @@ exports.unFollow = async function (req,res) {
     }
 };
 
-exports.getAll = async function(req, res) {
-    let users = await User.find({}, {name:1});
-    return res.status(200).send(users);
-};
-
 exports.updateActivity = async function(req, res) {
     let userId = req.params.userId;
     let slice = +req.params.slice;
@@ -131,19 +144,6 @@ exports.updateActivity = async function(req, res) {
         } else {
             return res.status(200).send({activity: result});
         }
-    }
-};
-
-exports.getProfile = async function(req,res) {
-    let userId = req.params.userId;
-    let userFound = await User.findById(userId);
-    if (!userFound) {
-        return res.status(404).send({message: 'User not found'});
-    } else {
-        let posts = await Post.countDocuments({owner_id: userId});
-        let events = await Event.countDocuments({owner_id: userId});
-        let profile = new Profile(userFound._id, userFound.email, userFound.name, userFound.followers.length, userFound.following.length, posts, events);
-        return res.status(200).send({profile: profile});
     }
 };
 

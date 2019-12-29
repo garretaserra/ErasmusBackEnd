@@ -1,5 +1,4 @@
 import express = require('express');
-import user from "../models/user";
 export let userRouter: express.Router = express.Router();
 
 let userScripts = require('./../controllers/userScripts');
@@ -7,10 +6,10 @@ let auth = require('./auth');
 
 userRouter.post('/register', auth.optional, userScripts.register);
 userRouter.post('/login', auth.optional, userScripts.login);
+userRouter.get('/all/:userId?', auth.optional, userScripts.getAll);
 userRouter.put('/follow', auth.optional, userScripts.follow);
 userRouter.put('/unfollow',auth.optional, userScripts.unFollow);
 userRouter.get('/user', auth.required, function (req, res){res.status(200).send({message: 'It works'})});
-userRouter.get('/all', auth.optional, userScripts.getAll);
 userRouter.put('/activity/:userId/:slice', auth.optional, userScripts.updateActivity);
 userRouter.get('/profile/:userId', auth.optional, userScripts.getProfile);
 userRouter.get('/followers/:userId', auth.optional, userScripts.getFollowers);
