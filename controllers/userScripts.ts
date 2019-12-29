@@ -9,23 +9,10 @@ let Base = require('../models/base');
 
 exports.login = async function(req, res, next) {
     let user = req.body;
-    if(!user.email) {
-        return res.status(422).json({
-            errors: {
-                email: 'is required',
-            },
-        });
-    }
-    if(!user.password) {
-        return res.status(422).json({
-            errors: {
-                password: 'is required',
-            },
-        });
-    }
-    let foundUser = await User.findOne({email: user.email}).populate('activity');
+
+    let foundUser = await User.findOne({email: user.email});
     if (!foundUser)
-        return res.status(400).send('User not found');
+        return res.status(404).send('User not found');
     else{
         if(foundUser.validatePassword(user.password)){
             let jwt = foundUser.generateJWT();
@@ -40,20 +27,7 @@ exports.login = async function(req, res, next) {
 
 exports.register = async function (req, res){
     let user = req.body;
-    if(!user.email) {
-        return res.status(422).json({
-            errors: {
-                email: 'is required',
-            },
-        });
-    }
-    if(!user.password) {
-        return res.status(422).json({
-            errors: {
-                password: 'is required',
-            },
-        });
-    }
+
     let foundUser = await User.findOne({email:user.email});
     if(foundUser) return res.status(409).json({message: "Existant User"});
     else {
@@ -64,6 +38,68 @@ exports.register = async function (req, res){
                 jwt: newUser.generateJWT(),
                 user: newUser.toAuthJSON()
             }));
+    }
+};
+
+exports.getAll = async function(req, res) {
+    let userId = req.params.userId;
+    let users = await User.find({_id:{$nin:userId}}, {name:1});
+    return res.status(200).send(users);
+};
+
+exports.getProfile = async function(req,res) {
+    let userId = req.params.userId;
+    let userFound = await User.findById(userId);
+    if (!userFound) {
+        return res.status(404).send({message: 'User not found'});
+    } else {
+        let posts = await Post.countDocuments({owner: userId});
+        let events = await Event.countDocuments({owner: userId});
+        let profile = new Profile(userFound._id, userFound.email, userFound.name, userFound.followers.length, userFound.following.length, posts, events);
+        return res.status(200).send({profile: profile});
+    }
+};
+
+exports.getFollowers = async function(req, res) {
+    let userId = req.params.userId;
+    let followers = await User.findOne({ _id:userId },{ _id:0, followers:1 }).populate('followers', '_id name', null);
+    if (!followers) {
+        return res.status(404).send({message: 'User not found'});
+    } else {
+        return res.status(200).send(followers);
+    }
+};
+
+exports.getFollowing = async function(req, res) {
+    let userId = req.params.userId;
+    let following = await User.findOne({ _id:userId },{ _id:0, following:1 }).populate('following', '_id name', null);
+    if (!following) {
+        return res.status(404).send({message: 'User not found'});
+    } else {
+        return res.status(200).send(following);
+    }
+};
+
+exports.getPosts = async function(req, res) {
+    let userId = req.params.userId;
+    let slice = +req.params.slice;
+    let posts = await Post.find({owner: userId}).sort( {modificationDate: -1 }).skip(slice).limit(10).populate('owner', '_id name', null)
+        .populate('comments.owner','_id name');
+    if (!posts) {
+        return res.status(404).send({message: 'User not found'});
+    } else {
+        return res.status(200).send({posts:posts});
+    }
+};
+
+exports.getEvents = async function(req, res) {
+    let userId = req.params.userId;
+    let slice = +req.params.slice;
+    let events = await Event.find({owner: userId}).populate('members', '_id name', null).populate('owner', '_id name', null).sort( {modificationDate: -1 }).skip(slice).limit(10);
+    if (!events) {
+        return res.status(404).send({message: 'User not found'});
+    } else {
+        return res.status(200).send({events:events});
     }
 };
 
@@ -110,11 +146,6 @@ exports.unFollow = async function (req,res) {
     }
 };
 
-exports.getAll = async function(req, res) {
-    let users = await User.find({}, {name:1});
-    return res.status(200).send(users);
-};
-
 exports.updateActivity = async function(req, res) {
     let userId = req.params.userId;
     let slice = +req.params.slice;
@@ -125,67 +156,15 @@ exports.updateActivity = async function(req, res) {
         let fetch = new Array<any>();
         userFound.following.forEach(following => fetch.push(following));
         fetch.push(userId);
-        let result = await Base.find({owner_id: {$in:fetch}}).sort( {modificationDate: -1 }).skip(slice).limit(10);
+        let result = await Base.find({owner: {$in:fetch}}).populate('members', '_id name', null).populate('owner', '_id name', null)
+            .populate('comments.owner','_id name')
+            .sort( {modificationDate: -1 }).skip(slice).limit(10);
+
         if(result.length==0) {
             return res.status(204).send({message:'Empty list'});
         } else {
             return res.status(200).send({activity: result});
         }
-    }
-};
-
-exports.getProfile = async function(req,res) {
-    let userId = req.params.userId;
-    let userFound = await User.findById(userId);
-    if (!userFound) {
-        return res.status(404).send({message: 'User not found'});
-    } else {
-        let posts = await Post.countDocuments({owner_id: userId});
-        let events = await Event.countDocuments({owner_id: userId});
-        let profile = new Profile(userFound._id, userFound.email, userFound.name, userFound.followers.length, userFound.following.length, posts, events);
-        return res.status(200).send({profile: profile});
-    }
-};
-
-exports.getFollowers = async function(req, res) {
-    let userId = req.params.userId;
-    let followers = await User.findOne({ _id:userId },{ _id:0, followers:1 }).populate('followers', '_id name', null);
-    if (!followers) {
-        return res.status(404).send({message: 'User not found'});
-    } else {
-        return res.status(200).send(followers);
-    }
-};
-
-exports.getFollowing = async function(req, res) {
-    let userId = req.params.userId;
-    let following = await User.findOne({ _id:userId },{ _id:0, following:1 }).populate('following', '_id name', null);
-    if (!following) {
-        return res.status(404).send({message: 'User not found'});
-    } else {
-        return res.status(200).send(following);
-    }
-};
-
-exports.getPosts = async function(req, res) {
-    let userId = req.params.userId;
-    let slice = +req.params.slice;
-    let posts = await Post.find({owner_id: userId}).sort( {modificationDate: -1 }).skip(slice).limit(10);
-    if (!posts) {
-        return res.status(404).send({message: 'User not found'});
-    } else {
-        return res.status(200).send({posts:posts});
-    }
-};
-
-exports.getEvents = async function(req, res) {
-    let userId = req.params.userId;
-    let slice = +req.params.slice;
-    let events = await Event.find({owner_id: userId}).sort( {modificationDate: -1 }).skip(slice).limit(10);
-    if (!events) {
-        return res.status(404).send({message: 'User not found'});
-    } else {
-        return res.status(200).send({events:events});
     }
 };
 
@@ -204,7 +183,7 @@ exports.dropOut = async function (req, res) {
         return res.status(404).send({message: 'User not found'});
     } else {
         await User.updateMany({}, {$pull: {followers: userId, following: userId}}, {multi: true});
-        await Base.deleteMany({owner_id:userId}, {multi: true});
+        await Base.deleteMany({owner:userId}, {multi: true});
         return res.status(200).send({message: 'Dropped out successfully'});
     }
 };

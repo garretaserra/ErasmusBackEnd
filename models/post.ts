@@ -3,9 +3,10 @@ let mongoose = require('mongoose');
 let Base = require('./base');
 
 let Post = Base.discriminator('Post', new mongoose.Schema({
+        message: { type: String, required: true },
         comments: [{
-            owner: String,
-            comment: String
+            owner: { type: mongoose.Schema.ObjectId, ref: 'User' ,required: true},
+            message: String
         }]
     }),
 );

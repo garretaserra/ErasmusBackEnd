@@ -4,22 +4,21 @@ let Event = require('../models/event');
 
 exports.newEvent = async function(req, res, next) {
     let event = req.body.event;
-    let userFound = await User.findById(event.owner_id);
-
+    let userFound = await User.findById(event.owner);
     if (!userFound) {
         return res.status(404).send({message: 'User not found'})
     } else {
         event = new Event(event);
         event.modificationDate = Date.now();
-        event.members.push(event.owner_id);
-        event.save();
-        return res.status(200).send({post:event});
+        await event.save();
+        await Event.updateOne({_id:event._id},{$addToSet:{members:event.owner}});
+        return res.status(200).send({event:event});
     }
 };
 
 exports.modifyEvent = async function(req, res, next) {
     let event = req.body.event;
-    event = await Event.updateOne(event);
+    event = await Event.updateOne({_id:event._id}, {event});
     if(event.n==0){
         return res.status(404).send({message: 'Event not found'});
     } else {
@@ -43,7 +42,7 @@ exports.deleteEvent = async function(req, res, next) {
 
 exports.getEvent = async function (req, res, next) {
     let eventId = req.params.eventId;
-    let event = await Event.findOne({_id:eventId});
+    let event = await Event.findOne({_id:eventId}).populate('owner', '_id name', null);
     if(!event){
         return res.status(404).send({message: 'Event not found'});
     } else {
