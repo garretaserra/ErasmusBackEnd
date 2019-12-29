@@ -3,6 +3,7 @@ import User from '../models/user';
 let Event = require('../models/event');
 
 exports.newEvent = async function(req, res, next) {
+    console.log('event: ', req.body);
     let event = req.body.event;
     let userFound = await User.findById(event.owner);
     if (!userFound) {
