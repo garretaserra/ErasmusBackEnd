@@ -13,23 +13,31 @@ exports.newEvent = async function(req, res, next) {
         event = new Event(event);
         event.modificationDate = Date.now();
         await event.save();
-        await Event.updateOne({_id:event._id},{$addToSet:{members:event.owner}});
+        await Event.findOneAndUpdate({_id:event._id},{$addToSet:{members:event.owner}});
         return res.status(200).send({event:event});
     }
 };
 
 exports.modifyEvent = async function(req, res, next) {
-    let event = req.body.event;
+    let eventId = req.body.eventId;
 
-    event = await Event.updateOne({_id:event._id}, event);
+    let newDescription = req.body.newDescription;
+    let newDate = req.body.newDate;
+    let newLocation = req.body.newLocation;
 
-    if(event.n==0){
-        return res.status(404).send({message: 'Event not found'});
+    let result;
+
+    if(newDescription) result = await Event.updateOne({_id:eventId},{$set:{description:newDescription}});
+    else if (newDate) result = await Event.updateOne({_id:eventId},{$set:{eventDate:newDate}});
+    else if (newLocation) result = await Event.updateOne({_id:eventId},{$set:{location:newLocation}});
+
+    if(result.n==0) {
+        return res.status(404).send({message:'User not found'});
     } else {
-        if(event.nModified==0){
-            return res.status(304).send({message: 'Not modified'});
+        if(result.nModified==0) {
+            return res.status(304).send({message:'Not modified'});
         } else {
-            return res.status(200).send({message: 'Modified successfully'});
+            return res.status(200).send({message:'Updated successfully'})
         }
     }
 };

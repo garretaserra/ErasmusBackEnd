@@ -10,26 +10,10 @@ exports.newPost = async function(req, res, next) {
     if (!userFound) {
         return res.status(404).send({message: 'User not found'})
     } else {
-        let message = new Post(post);
-        message.modificationDate = Date.now();
-        message.save();
-        return res.status(200).send({post:message});
-    }
-};
-
-exports.modifyPost = async function(req, res, next) {
-    let post = req.body.post;
-
-    post = await Post.updateOne({_id:post._id}, post);
-
-    if(post.n==0) {
-        return res.status(404).send({message: 'Post not found'});
-    } else {
-        if(post.nModified==0){
-            return res.status(304).send({message: 'Not modified'});
-        } else {
-            return res.status(200).send({post:post});
-        }
+        post = new Post(post);
+        post.modificationDate = Date.now();
+        await post.save();
+        return res.status(200).send({post:post});
     }
 };
 
