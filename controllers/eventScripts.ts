@@ -43,7 +43,7 @@ exports.deleteEvent = async function(req, res, next) {
 
 exports.getEvent = async function (req, res, next) {
     let eventId = req.params.eventId;
-    let event = await Event.findOne({_id:eventId}).populate('owner', '_id name', null);
+    let event = await Event.findOne({_id:eventId}).populate('members', '_id name', null).populate('owner', '_id name', null);
     if(!event){
         return res.status(404).send({message: 'Event not found'});
     } else {
