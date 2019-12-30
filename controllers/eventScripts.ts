@@ -3,9 +3,10 @@ import User from '../models/user';
 let Event = require('../models/event');
 
 exports.newEvent = async function(req, res, next) {
-    console.log('event: ', req.body);
     let event = req.body.event;
+
     let userFound = await User.findById(event.owner);
+
     if (!userFound) {
         return res.status(404).send({message: 'User not found'})
     } else {
@@ -19,7 +20,9 @@ exports.newEvent = async function(req, res, next) {
 
 exports.modifyEvent = async function(req, res, next) {
     let event = req.body.event;
-    event = await Event.updateOne({_id:event._id}, {event});
+
+    event = await Event.updateOne({_id:event._id}, event);
+
     if(event.n==0){
         return res.status(404).send({message: 'Event not found'});
     } else {
@@ -33,7 +36,9 @@ exports.modifyEvent = async function(req, res, next) {
 
 exports.deleteEvent = async function(req, res, next) {
     let eventId = req.params.eventId;
+
     let event = await Event.findByIdAndDelete(eventId);
+
     if(!event){
         return res.status(404).send({message: 'Event not found'});
     } else {
@@ -43,7 +48,9 @@ exports.deleteEvent = async function(req, res, next) {
 
 exports.getEvent = async function (req, res, next) {
     let eventId = req.params.eventId;
+
     let event = await Event.findOne({_id:eventId}).populate('members', '_id name', null).populate('owner', '_id name', null);
+
     if(!event){
         return res.status(404).send({message: 'Event not found'});
     } else {
@@ -54,7 +61,9 @@ exports.getEvent = async function (req, res, next) {
 exports.join = async function (req, res, next) {
     let eventId = req.body.eventId;
     let userId = req.body.userId;
+
     let event = await Event.updateOne({_id:eventId},{$addToSet:{members:userId}});
+
     if(event.n==0){
         return res.status(404).send({message: 'Event not found'});
     } else {
@@ -69,7 +78,9 @@ exports.join = async function (req, res, next) {
 exports.leave = async function (req, res, next) {
     let eventId = req.body.eventId;
     let userId = req.body.userId;
+
     let event = await Event.updateOne({_id:eventId},{$pull:{members:userId}});
+
     if(event.n==0){
         return res.status(404).send({message: 'Event not found'});
     } else {
