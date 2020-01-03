@@ -17,5 +17,7 @@ userRouter.get('/followers/:userId', auth.optional, userScripts.getFollowers);
 userRouter.get('/following/:userId', auth.optional, userScripts.getFollowing);
 userRouter.get('/posts/:userId', auth.optional, userScripts.getPosts);
 userRouter.get('/search', userScripts.search);
+userRouter.post('/image/edit', auth.optional, userScripts.editImage);
+userRouter.get('/image', auth.optional, userScripts.getImage);
 
 export default userRouter;

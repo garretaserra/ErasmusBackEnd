@@ -3,6 +3,7 @@
 import User from '../models/user';
 import Profile from '../models/profile';
 import AuthUser from "../models/authUser";
+let ObjectId = require('mongodb').ObjectID;
 
 exports.login = async function(req, res, next) {
     let user = req.body;
@@ -174,4 +175,18 @@ exports.search = async function(req, res) {
     await User.find({"email": pattern}).then((users=>{
         res.status(200).json(users);
     }));
+};
+
+exports.editImage = async function(req, res) {
+    let image = req.body.photo;
+    let id = req.body.id;
+    let user = await User.updateOne({_id: ObjectId(id)}, {profilePhoto: image});
+    console.log(user);
+    res.status(200).send();
+};
+
+exports.getImage = async function(req, res){
+    let id = req.query.id;
+    let user = await User.findById(id);
+    res.status(200).send({photo: user.profilePhoto});
 };
