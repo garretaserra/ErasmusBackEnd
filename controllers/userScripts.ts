@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import User from '../models/user';
 import Profile from '../models/profile';
 import AuthUser from "../models/authUser";
+import Message from '../models/message';
 
 exports.login = async function(req, res, next) {
     let user = req.body;
@@ -175,4 +176,28 @@ exports.search = async function(req, res) {
     await User.find({"email": pattern}).then((users=>{
         res.status(200).json(users);
     }));
+};
+
+exports.getMessages = async function(req: Request, res: Response) {
+    let userId: string = req.params.userId;
+    let messages = await Message.find({$or: [{'author': userId}, {'destination': userId}]});
+    if (messages) {
+        return res.status(200).json(messages);
+    } else {
+        return res.status(404).send('Not Found');
+    }
+};
+
+exports.postMessage = async function(req: Request, res: Response) {
+    const author: string = req.body.author;
+    const destination: string = req.body.destination;
+    const text: string = req.body.text;
+    const timestamp: Date = new Date();
+
+    const msg = new Message({author, destination, text, timestamp});
+    msg.save().then((data) => {
+        res.status(201).json(data);
+    }).catch((err) => {
+        res.status(500).json(err);
+    })
 };

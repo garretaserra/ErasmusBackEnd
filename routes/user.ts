@@ -16,7 +16,8 @@ userRouter.get('/followers/:userId', auth.optional, userScripts.getFollowers);
 userRouter.get('/following/:userId', auth.optional, userScripts.getFollowing);
 userRouter.get('/posts/:userId', auth.optional, userScripts.getPosts);
 userRouter.get('/search', userScripts.search);
-userRouter.get('/messages', auth.optional, userScripts.messages);
+userRouter.post('/message', auth.optional, userScripts.postMessage);
+userRouter.get('/messages/:userId', auth.optional, userScripts.getMessages);
 
 export default userRouter;
 
