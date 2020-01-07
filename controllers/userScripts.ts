@@ -6,6 +6,7 @@ import AuthUser from '../models/authUser';
 let Post = require('../models/post');
 let Event = require('../models/event');
 let Base = require('../models/base');
+let ObjectId = require('mongodb').ObjectID;
 
 exports.login = async function(req, res, next) {
     let user = req.body;
@@ -219,4 +220,17 @@ exports.dropOut = async function (req, res) {
         await Base.deleteMany({owner:userId}, {multi: true});
         return res.status(200).send({message: 'Dropped out successfully'});
     }
+};
+
+exports.editImage = async function(req, res) {
+    let image = req.body.photo;
+    let id = req.body.id;
+    let result = await User.updateOne({_id: ObjectId(id)}, {profilePhoto: image});
+    res.status(200).send({result: result});
+};
+
+exports.getImage = async function(req, res){
+    let id = req.query.id;
+    let user = await User.findById(id);
+    res.status(200).send({photo: user.profilePhoto});
 };

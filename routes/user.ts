@@ -17,6 +17,8 @@ userRouter.get('/following/:userId', auth.optional, userScripts.getFollowing);
 userRouter.get('/posts/:userId/:slice', auth.optional, userScripts.getPosts);
 userRouter.get('/events/:userId/:slice', auth.optional, userScripts.getEvents);
 userRouter.get('/search', userScripts.search);
+userRouter.post('/image/edit', auth.optional, userScripts.editImage);
+userRouter.get('/image', auth.optional, userScripts.getImage);
 userRouter.delete('/:userId', userScripts.dropOut);
 
 export default userRouter;
