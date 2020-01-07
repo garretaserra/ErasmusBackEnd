@@ -180,9 +180,8 @@ exports.search = async function(req, res) {
 exports.editImage = async function(req, res) {
     let image = req.body.photo;
     let id = req.body.id;
-    let user = await User.updateOne({_id: ObjectId(id)}, {profilePhoto: image});
-    console.log(user);
-    res.status(200).send();
+    let result = await User.updateOne({_id: ObjectId(id)}, {profilePhoto: image});
+    res.status(200).send({result: result});
 };
 
 exports.getImage = async function(req, res){
