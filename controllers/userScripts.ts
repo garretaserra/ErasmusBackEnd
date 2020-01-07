@@ -199,5 +199,6 @@ exports.postMessage = async function(req: Request, res: Response) {
         res.status(201).json(data);
     }).catch((err) => {
         res.status(500).json(err);
+        console.log(err);
     })
 };
