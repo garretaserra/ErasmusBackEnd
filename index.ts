@@ -114,6 +114,10 @@ function onConnection(socket) {
         }
     });
 
+    socket.on('giveMeUserList', function () {
+        socket.emit('userList', Array.from(userList));
+    });
+
     //On a disconnection, delete its socketId from the hashMap
     socket.on('disconnect', function() {
         console.log(email + ' disconnected');
