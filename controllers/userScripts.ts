@@ -1,5 +1,5 @@
 'use strict';
-
+import {Request, Response} from  'express';
 import User from '../models/user';
 import Profile from '../models/profile';
 import Message from '../models/message';
