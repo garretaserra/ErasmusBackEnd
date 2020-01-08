@@ -20,5 +20,7 @@ userRouter.get('/search', userScripts.search);
 userRouter.post('/image/edit', auth.optional, userScripts.editImage);
 userRouter.get('/image', auth.optional, userScripts.getImage);
 userRouter.delete('/:userId', userScripts.dropOut);
+userRouter.post('/message', auth.optional, userScripts.postMessage);
+userRouter.get('/messages/:userId', auth.optional, userScripts.getMessages);
 
 export default userRouter;

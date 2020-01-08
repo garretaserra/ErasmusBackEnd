@@ -2,6 +2,7 @@
 
 import User from '../models/user';
 import Profile from '../models/profile';
+import Message from '../models/message';
 import AuthUser from '../models/authUser';
 let Post = require('../models/post');
 let Event = require('../models/event');
@@ -233,4 +234,29 @@ exports.getImage = async function(req, res){
     let id = req.query.id;
     let user = await User.findById(id);
     res.status(200).send({photo: user.profilePhoto});
+};
+
+exports.getMessages = async function(req: Request, res: Response) {
+    let userId: string = req.params.userId;
+    let messages = await Message.find({$or: [{'author': userId}, {'destination': userId}]});
+    if (messages) {
+        return res.status(200).json(messages);
+    } else {
+        return res.status(404).send('Not Found');
+    }
+};
+
+exports.postMessage = async function(req: Request, res: Response) {
+    const author: string = req.body.author;
+    const destination: string = req.body.destination;
+    const text: string = req.body.text;
+    const timestamp: Date = new Date();
+
+    const msg = new Message({author, destination, text, timestamp});
+    msg.save().then((data) => {
+        res.status(201).json(data);
+    }).catch((err) => {
+        res.status(500).json(err);
+        console.log(err);
+    })
 };
