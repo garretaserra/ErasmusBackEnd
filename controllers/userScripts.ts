@@ -3,6 +3,7 @@ import {Request, Response} from  'express';
 import User from '../models/user';
 import Profile from '../models/profile';
 import Message from '../models/message';
+import Notification from '../models/notification';
 import AuthUser from '../models/authUser';
 let Post = require('../models/post');
 let Event = require('../models/event');
@@ -254,6 +255,31 @@ exports.postMessage = async function(req: Request, res: Response) {
 
     const msg = new Message({author, destination, text, timestamp});
     msg.save().then((data) => {
+        res.status(201).json(data);
+    }).catch((err) => {
+        res.status(500).json(err);
+        console.log(err);
+    })
+};
+exports.getNotifications = async function(req: Request, res: Response) {
+    let userId: string = req.params.userId;
+    let notifications = await Notification.find({'destination': userId});
+    if (notifications) {
+        return res.status(200).json(notifications);
+    } else {
+        return res.status(404).send('Not Found');
+    }
+};
+exports.postNotification = async function(req: Request, res: Response) {
+    const author: string = req.body.author;
+    const destination: string = req.body.destination;
+    const text: string = req.body.text;
+    const type: string = req.body.type;
+    const goToUrl: string = req.body.goToUrl;
+    const timestamp: Date = new Date();
+
+    const notification = new Notification({author, destination, text, type, goToUrl, timestamp});
+    notification.save().then((data) => {
         res.status(201).json(data);
     }).catch((err) => {
         res.status(500).json(err);

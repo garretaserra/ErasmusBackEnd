@@ -22,5 +22,7 @@ userRouter.get('/image', auth.optional, userScripts.getImage);
 userRouter.delete('/:userId', userScripts.dropOut);
 userRouter.post('/message', auth.optional, userScripts.postMessage);
 userRouter.get('/messages/:userId', auth.optional, userScripts.getMessages);
+userRouter.get('/notifications/:userId', auth.optional, userScripts.getNotifications);
+userRouter.post('/notification', auth.optional, userScripts.postNotification);
 
 export default userRouter;
