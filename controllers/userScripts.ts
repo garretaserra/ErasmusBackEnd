@@ -251,8 +251,9 @@ exports.postMessage = async function(req: Request, res: Response) {
     const destination: string = req.body.destination;
     const text: string = req.body.text;
     const timestamp: Date = new Date();
+    const read: Boolean = false;
 
-    const msg = new Message({author, destination, text, timestamp});
+    const msg = new Message({author, destination, text, timestamp, read});
     msg.save().then((data) => {
         res.status(201).json(data);
     }).catch((err) => {
