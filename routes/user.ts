@@ -22,5 +22,7 @@ userRouter.get('/image', auth.optional, userScripts.getImage);
 userRouter.delete('/:userId', userScripts.dropOut);
 userRouter.post('/message', auth.optional, userScripts.postMessage);
 userRouter.get('/messages/:userId', auth.optional, userScripts.getMessages);
+//Receiver wants to ACK senders' messages
+userRouter.put('/message/:senderId/:receiverId', auth.optional, userScripts.ackMessages);
 
 export default userRouter;
