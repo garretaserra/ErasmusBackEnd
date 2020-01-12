@@ -251,12 +251,25 @@ exports.postMessage = async function(req: Request, res: Response) {
     const destination: string = req.body.destination;
     const text: string = req.body.text;
     const timestamp: Date = new Date();
+    const read: Boolean = false;
 
-    const msg = new Message({author, destination, text, timestamp});
+    const msg = new Message({author, destination, text, timestamp, read});
     msg.save().then((data) => {
         res.status(201).json(data);
     }).catch((err) => {
         res.status(500).json(err);
         console.log(err);
     })
+};
+
+exports.ackMessages = async function(req: Request, res: Response) {
+    const senderId: string = req.params.senderId;
+    const receiverId: string = req.params.receiverId;
+
+    Message.updateMany({ author: senderId, destination: receiverId }, { read: true }).then((data) => {
+        res.status(200).json(data);
+    }).catch((err) => {
+        res.status(500).json(err);
+        console.log(err);
+    });
 };
