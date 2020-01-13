@@ -15,6 +15,7 @@ userRouter.get('/profile/:userId', auth.optional, userScripts.getProfile);
 userRouter.get('/followers/:userId', auth.optional, userScripts.getFollowers);
 userRouter.get('/following/:userId', auth.optional, userScripts.getFollowing);
 userRouter.get('/posts/:userId/:slice', auth.optional, userScripts.getPosts);
+userRouter.get('/events/:userId', auth.optional, userScripts.getEventsFromUser);
 userRouter.get('/events/:userId/:slice', auth.optional, userScripts.getEvents);
 userRouter.get('/search', userScripts.search);
 userRouter.post('/image/edit', auth.optional, userScripts.editImage);
