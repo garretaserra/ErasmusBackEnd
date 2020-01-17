@@ -32,7 +32,9 @@ exports.deletePost = async function(req, res, next) {
 exports.getPost = async function (req, res, next) {
     let postId = req.params.postId;
 
-    let post = await Post.findOne({_id:postId}).populate('owner', '_id name', null);
+    let post = await Post.findOne({_id:postId})
+        .populate('owner', '_id name', null)
+        .populate('comments.owner','_id name', null);
 
     if(!post){
         return res.status(404).send({message: 'Post not found'});
