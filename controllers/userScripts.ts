@@ -19,7 +19,7 @@ exports.login = async function(req, res, next) {
     else{
         if(foundUser.validatePassword(user.password)){
             let jwt = foundUser.generateJWT();
-            let finalUser = new AuthUser(foundUser._id,foundUser.name,foundUser.email,foundUser.activity);
+            let finalUser = new AuthUser(foundUser._id,foundUser.email,foundUser.name,foundUser.activity);
             return res.status(200).json({jwt: jwt, user: finalUser});
         }
         else {
