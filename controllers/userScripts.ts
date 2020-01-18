@@ -33,7 +33,7 @@ exports.register = async function (req, res){
 
     let foundUser = await User.findOne({email:user.email});
 
-    if(foundUser) return res.status(409).json({message: "Existant User"});
+    if(foundUser) return res.status(409).json({message: "Existent User"});
     else {
         let newUser = new User(user);
         newUser.setPassword(user.password);
