@@ -9,9 +9,9 @@ let auth = require('./auth');
 
 const router: Router = Router();
 
-router.use('/user', auth.required, userRouter);
-router.use('/post', auth.required, postRouter);
-router.use('/event', auth.required, eventRouter);
+router.use('/user', auth.optional, userRouter);
+router.use('/post', auth.optional, postRouter);
+router.use('/event', auth.optional, eventRouter);
 router.use('/test', auth.optional, testRouter);
 
 export default router;
