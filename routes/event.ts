@@ -4,11 +4,11 @@ let auth = require('./auth');
 
 let eventScripts = require('./../controllers/eventScripts');
 
-eventRouter.post('', auth.optional, eventScripts.newEvent);
-eventRouter.delete('/:eventId', auth.optional, eventScripts.deleteEvent);
-eventRouter.put('', auth.optional, eventScripts.modifyEvent);
-eventRouter.get('/:eventId', auth.optional, eventScripts.getEvent);
-eventRouter.put('/join', auth.optional, eventScripts.join);
-eventRouter.put('/leave', auth.optional, eventScripts.leave);
+eventRouter.post('', auth.required, eventScripts.newEvent);
+eventRouter.delete('/:eventId', auth.required, eventScripts.deleteEvent);
+eventRouter.put('', auth.required, eventScripts.modifyEvent);
+eventRouter.get('/:eventId', auth.required, eventScripts.getEvent);
+eventRouter.put('/join', auth.required, eventScripts.join);
+eventRouter.put('/leave', auth.required, eventScripts.leave);
 
 export default eventRouter;

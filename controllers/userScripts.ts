@@ -174,6 +174,26 @@ exports.unFollow = async function (req,res) {
     }
 };
 
+exports.getEventsFromUser = async function(req, res) {
+    let userId = req.params.userId;
+    let user = await User.findOne({_id: userId});
+    if (!user) {
+        return res.status(404);
+    }
+    let list = new Array<string>();
+    user.following.forEach((following) => list.push(following));
+    list.push(userId);
+    let result = await Event.find({members: {$in:list}})
+        .populate('members', '_id name', null)
+        .populate('owner', '_id name', null)
+        .populate('comments.owner','_id name', null);
+    if (result.length == 0) {
+        return res.status(204);
+    } else {
+        return res.status(200).json(result);
+    }
+};
+
 exports.updateActivity = async function(req, res) {
     let userId = req.params.userId;
     let slice = +req.params.slice;
@@ -188,7 +208,7 @@ exports.updateActivity = async function(req, res) {
         fetch.push(userId);
         let result = await Base.find({owner: {$in:fetch}})
             .populate('members', '_id name', null)
-            .populate('owner', '_id name', null)
+            .populate('owner', '_id name profilePhoto', null)
             .populate('comments.owner','_id name', null)
             .sort( {modificationDate: -1 })
             .skip(slice)
