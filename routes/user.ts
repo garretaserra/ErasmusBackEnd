@@ -6,6 +6,7 @@ let auth = require('./auth');
 
 userRouter.post('/register', auth.optional, userScripts.register);
 userRouter.post('/login', auth.optional, userScripts.login);
+<<<<<<< HEAD
 userRouter.get('/all/:userId?', auth.required, userScripts.getAll);
 userRouter.put('/follow', auth.required, userScripts.follow);
 userRouter.put('/unfollow',auth.required, userScripts.unFollow);
@@ -22,6 +23,8 @@ userRouter.get('/image', auth.required, userScripts.getImage);
 userRouter.delete('/:userId', auth.required, userScripts.dropOut);
 userRouter.post('/message', auth.required, userScripts.postMessage);
 userRouter.get('/messages/:userId', auth.required, userScripts.getMessages);
+userRouter.get('/events/:userId', auth.optional, userScripts.getEventsFromUser);
+
 //Receiver wants to ACK senders' messages
 userRouter.put('/message/:senderId/:receiverId', auth.required, userScripts.ackMessages);
 
