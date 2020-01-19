@@ -4,6 +4,7 @@ import User from '../models/user';
 import Profile from '../models/profile';
 import Message from '../models/message';
 import AuthUser from '../models/authUser';
+import {UserRegister} from "../../ErasmusApp/src/app/models/User/userRegister";
 let Post = require('../models/post');
 let Event = require('../models/event');
 let Base = require('../models/base');
@@ -254,7 +255,7 @@ exports.postMessage = async function(req: Request, res: Response) {
     const read: Boolean = false;
 
     const msg = new Message({author, destination, text, timestamp, read});
-    msg.save().then((data) => {
+    await msg.save().then((data) => {
         res.status(201).json(data);
     }).catch((err) => {
         res.status(500).json(err);
@@ -266,10 +267,19 @@ exports.ackMessages = async function(req: Request, res: Response) {
     const senderId: string = req.params.senderId;
     const receiverId: string = req.params.receiverId;
 
-    Message.updateMany({ author: senderId, destination: receiverId }, { read: true }).then((data) => {
+    await Message.updateMany({ author: senderId, destination: receiverId }, { read: true }).then((data) => {
         res.status(200).json(data);
     }).catch((err) => {
         res.status(500).json(err);
         console.log(err);
     });
+};
+
+exports.addErasmusInfo = async function(req, res) {
+    let userId = req.params.userId;
+    let info = req.body.info;
+    console.log("holaaaa");
+    await User.updateOne({_id:userId},{$set:info});
+    let user = await User.find({_id:userId});
+    return res.status(200).send({user:user});
 };
