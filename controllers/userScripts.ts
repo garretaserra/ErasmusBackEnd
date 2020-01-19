@@ -207,7 +207,7 @@ exports.updateActivity = async function(req, res) {
         fetch.push(userId);
         let result = await Base.find({owner: {$in:fetch}})
             .populate('members', '_id name', null)
-            .populate('owner', '_id name', null)
+            .populate('owner', '_id name profilePhoto', null)
             .populate('comments.owner','_id name', null)
             .sort( {modificationDate: -1 })
             .skip(slice)
