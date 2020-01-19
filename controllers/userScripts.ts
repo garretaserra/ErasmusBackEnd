@@ -278,13 +278,13 @@ exports.ackMessages = async function(req: Request, res: Response) {
 exports.addErasmusInfo = async function(req, res) {
     let userId = req.params.userId;
     let info = req.body.info;
-
+    
     let result = await User.updateOne({_id:userId},{$set:info});
     let user = await User.find({_id:userId});
-
     if(result.n==0) {
         return res.status(404).send({message:'User not found'});
     } else {
         return res.status(200).send({user:user});
     }
+
 };
