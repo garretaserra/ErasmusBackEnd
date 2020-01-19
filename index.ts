@@ -118,6 +118,13 @@ function onConnection(socket) {
         socket.emit('userList', Array.from(userList));
     });
 
+    socket.on('ACK', function (sender) {
+        console.log(email + 'confirms read messages from ' + sender);
+        if (userList.get(sender)) {
+            io.to(<string>userList.get(sender)).emit('ACK', email);
+        }
+    });
+
     //On a disconnection, delete its socketId from the hashMap
     socket.on('disconnect', function() {
         console.log(email + ' disconnected');

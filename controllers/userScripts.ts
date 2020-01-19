@@ -20,7 +20,7 @@ exports.login = async function(req, res, next) {
     else{
         if(foundUser.validatePassword(user.password)){
             let jwt = foundUser.generateJWT();
-            let finalUser = new AuthUser(foundUser._id,foundUser.name,foundUser.email,foundUser.activity);
+            let finalUser = new AuthUser(foundUser._id,foundUser.email,foundUser.name,foundUser.activity);
             return res.status(200).json({jwt: jwt, user: finalUser});
         }
         else {
@@ -34,7 +34,7 @@ exports.register = async function (req, res){
 
     let foundUser = await User.findOne({email:user.email});
 
-    if(foundUser) return res.status(409).json({message: "Existant User"});
+    if(foundUser) return res.status(409).json({message: "Existent User"});
     else {
         let newUser = new User(user);
         newUser.setPassword(user.password);
@@ -174,6 +174,26 @@ exports.unFollow = async function (req,res) {
     }
 };
 
+exports.getEventsFromUser = async function(req, res) {
+    let userId = req.params.userId;
+    let user = await User.findOne({_id: userId});
+    if (!user) {
+        return res.status(404);
+    }
+    let list = new Array<string>();
+    user.following.forEach((following) => list.push(following));
+    list.push(userId);
+    let result = await Event.find({members: {$in:list}})
+        .populate('members', '_id name', null)
+        .populate('owner', '_id name', null)
+        .populate('comments.owner','_id name', null);
+    if (result.length == 0) {
+        return res.status(204);
+    } else {
+        return res.status(200).json(result);
+    }
+};
+
 exports.updateActivity = async function(req, res) {
     let userId = req.params.userId;
     let slice = +req.params.slice;
@@ -252,8 +272,9 @@ exports.postMessage = async function(req: Request, res: Response) {
     const destination: string = req.body.destination;
     const text: string = req.body.text;
     const timestamp: Date = new Date();
+    const read: Boolean = false;
 
-    const msg = new Message({author, destination, text, timestamp});
+    const msg = new Message({author, destination, text, timestamp, read});
     msg.save().then((data) => {
         res.status(201).json(data);
     }).catch((err) => {
@@ -261,6 +282,7 @@ exports.postMessage = async function(req: Request, res: Response) {
         console.log(err);
     })
 };
+
 exports.getNotifications = async function(req: Request, res: Response) {
     let userId: string = req.params.userId;
     let notifications = await Notification.find({'destination': userId});
@@ -270,6 +292,7 @@ exports.getNotifications = async function(req: Request, res: Response) {
         return res.status(404).send('Not Found');
     }
 };
+
 exports.postNotification = async function(req: Request, res: Response) {
     const author: string = req.body.author;
     const destination: string = req.body.destination;
@@ -285,4 +308,17 @@ exports.postNotification = async function(req: Request, res: Response) {
         res.status(500).json(err);
         console.log(err);
     })
+};
+
+exports.ackMessages = async function(req: Request, res: Response) {
+    const senderId: string = req.params.senderId;
+    const receiverId: string = req.params.receiverId;
+
+    Message.updateMany({ author: senderId, destination: receiverId }, { read: true }).then((data) => {
+        res.status(200).json(data);
+    }).catch((err) => {
+        res.status(500).json(err);
+        console.log(err);
+    });
+
 };

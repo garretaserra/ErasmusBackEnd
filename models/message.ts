@@ -4,7 +4,8 @@ const MessageSchema: Schema = new Schema({
     author: { type: String, required: true },
     destination: { type: String, required: true },
     text: { type: String, required: true },
-    timestamp: {type: Date, required: true}
+    timestamp: {type: Date, required: true},
+    read: {type: Boolean, required: true}
 });
 
 export default model('Message', MessageSchema);

@@ -5,10 +5,10 @@ let auth = require('./auth');
 
 let postScripts = require('./../controllers/postScripts');
 
-postRouter.post('', auth.optional, postScripts.newPost);
-postRouter.delete('/:postId', auth.optional, postScripts.deletePost);
-postRouter.get('/:postId', auth.optional, postScripts.getPost);
-postRouter.put('/comment', auth.optional, postScripts.comment);
-postRouter.put('/unComment', auth.optional, postScripts.unComment);
+postRouter.post('', auth.required, postScripts.newPost);
+postRouter.delete('/:postId', auth.required, postScripts.deletePost);
+postRouter.get('/:postId', auth.required, postScripts.getPost);
+postRouter.put('/comment', auth.required, postScripts.comment);
+postRouter.put('/unComment', auth.required, postScripts.unComment);
 
 export default postRouter;
