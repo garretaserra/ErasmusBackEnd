@@ -6,7 +6,6 @@ let auth = require('./auth');
 
 userRouter.post('/register', auth.optional, userScripts.register);
 userRouter.post('/login', auth.optional, userScripts.login);
-<<<<<<< HEAD
 userRouter.get('/all/:userId?', auth.required, userScripts.getAll);
 userRouter.put('/follow', auth.required, userScripts.follow);
 userRouter.put('/unfollow',auth.required, userScripts.unFollow);
