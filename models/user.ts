@@ -13,11 +13,12 @@ const UserSchema: Schema = new Schema({
     followers: [{ type: Schema.ObjectId, ref: 'User', unique: false }], //Gente que me sigue a mí
     following: [{ type: Schema.ObjectId, ref: 'User', unique: false }], //Gente a la que yo sigo
     age: { type: Number },
-    homeUniversity: { type: String },
-    homeCountry: { type: String },
     course: { type: Number },
-    destUniversity: { type: String },
-    destCountry: { type: String }
+    homeUniversity: { type: String },
+    destUniversity: {  type: String },
+    languages:[{
+        name: String
+    }]
 });
 
 UserSchema.methods.setPassword = function(password) {
