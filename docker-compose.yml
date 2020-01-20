@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+  mongo:
+    container_name: mongo
+    restart: always
+    image: mongo
+    volumes:
+      - /data/db
+    ports:
+      - '27017:27017'
+
+  restapi:
+    container_name: restapi
+    image: carlogattuso/typescript_restapi:v1.0.1
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongo
+    links:
+      - mongo
+
+  angular:
+    container_name: angular
+    image: carlogattuso/angular_docker:v1.0.3
+    ports:
+      - '4200:4200'
+  
