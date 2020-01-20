@@ -288,7 +288,7 @@ exports.getImage = async function(req, res){
 
 exports.getMessages = async function(req: Request, res: Response) {
     let userId: string = req.params.userId;
-    let messages = await Message.find({$or: [{'author': userId}, {'destination': userId}]});
+    let messages = await Message.find({$or: [{'author': userId}, {'destination': userId}, {'destination': 'everyone'}]});
     if (messages) {
         return res.status(200).json(messages);
     } else {

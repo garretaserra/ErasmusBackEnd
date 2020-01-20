@@ -111,8 +111,8 @@ function onConnection(socket) {
         let message = data.message;
         if (userList.get(data.destination)) {
             io.to(<string>userList.get(data.destination)).emit('message', {message, email});
-        } else if (data.destination === '*') {
-            socket.broadcast.emit('message', {message, email});
+        } else if (data.destination === 'everyone') {
+            socket.broadcast.emit('message', {message, email, everyone: true});
         }
     });
 
