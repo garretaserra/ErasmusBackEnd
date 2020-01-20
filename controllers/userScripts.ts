@@ -4,8 +4,6 @@ import User from '../models/user';
 import Profile from '../models/profile';
 import Message from '../models/message';
 import AuthUser from '../models/authUser';
-import {UserRegister} from "../../ErasmusApp/src/app/models/User/userRegister";
-import user from "../models/user";
 let Post = require('../models/post');
 let Event = require('../models/event');
 let Base = require('../models/base');
