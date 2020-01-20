@@ -18,7 +18,8 @@ const UserSchema: Schema = new Schema({
     destUniversity: {  type: String },
     languages:[{
         name: String
-    }]
+    }],
+    notifications:[{type: Schema.ObjectId, ref: 'Notification', unique: false}]
 });
 
 UserSchema.methods.setPassword = function(password) {

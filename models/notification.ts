@@ -1,12 +1,12 @@
-import {Schema, model} from 'mongoose';
+export {}
+let mongoose = require('mongoose');
 
-const NotificationSchema: Schema = new Schema({
-    author: { type: String, required: true },
-    destination: { type: String, required: true },
-    text: { type: String, required: true },
-    type: { type: String, required: true },
-    goToUrl: { type: String },
-    timestamp: {type: Date, required: true}
-});
+let Notification = mongoose.model('Notification', new mongoose.Schema({
+        author: {type: String, required: true},
+        text: {type: String, required: true},
+        type: {type: String, required: true},
+        goToUrl: {type: String},
+    }),
+);
 
-export default model('Notification', NotificationSchema);
+module.exports = mongoose.model('Notification');

@@ -1,6 +1,7 @@
 'use strict';
 import User from '../models/user';
 let Post = require('../models/post');
+let Notification = require('../models/notification');
 
 exports.newPost = async function(req, res, next) {
     let post = req.body.post;
@@ -12,10 +13,25 @@ exports.newPost = async function(req, res, next) {
     } else {
         post = new Post(post);
         post.modificationDate = Date.now();
-        await post.save();
+        post = await post.save();
+        await makeNotificationForPost(post, userFound);
+
         return res.status(200).send({post:post});
     }
 };
+
+async function makeNotificationForPost(post: any, owner: any) {
+    let notification = new Notification();
+    notification.author = owner.name;
+    notification.type = 'post';
+    notification.goToUrl = '/comments/'+post._id;
+    notification.text = owner.name + ' ha publicado un post.';
+    notification = await notification.save();
+
+    owner.followers.forEach(async followerId=>{
+        await User.updateOne({_id:followerId._id},{$push:{notifications: notification._id}});
+    });
+}
 
 exports.deletePost = async function(req, res, next) {
     let postId = req.params.postId;
