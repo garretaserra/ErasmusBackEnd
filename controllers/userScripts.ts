@@ -5,6 +5,7 @@ import Profile from '../models/profile';
 import Message from '../models/message';
 import AuthUser from '../models/authUser';
 import {UserRegister} from "../../ErasmusApp/src/app/models/User/userRegister";
+import user from "../models/user";
 let Post = require('../models/post');
 let Event = require('../models/event');
 let Base = require('../models/base');
@@ -366,4 +367,10 @@ exports.addErasmusInfo = async function(req, res) {
     } else {
         return res.status(200).send({user:user});
     }
+};
+
+exports.getErasmusInfo = async function (req, res) {
+    let userId = req.params.userId;
+    let info = await User.findOne({_id:userId},{ _id:0, course:1, homeUniversity:1, destUniversity:1, languages:1 });
+    return res.status(200).send({info});
 };

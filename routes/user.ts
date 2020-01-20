@@ -26,6 +26,6 @@ userRouter.get('/messages/:userId', auth.required, userScripts.getMessages);
 //Receiver wants to ACK senders' messages
 userRouter.put('/message/:senderId/:receiverId', auth.optional, userScripts.ackMessages);
 userRouter.put('/erasmusInfo/:userId', auth.optional, userScripts.addErasmusInfo);
-//userRouter.get('/otherProfile/:userId', auth.optional, userScripts.getOtherProfile);
+userRouter.get('/erasmusInfo/:userId', auth.optional, userScripts.getErasmusInfo);
 
 export default userRouter;
