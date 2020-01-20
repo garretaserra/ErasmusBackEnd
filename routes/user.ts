@@ -16,6 +16,7 @@ userRouter.get('/followers/:userId', auth.required, userScripts.getFollowers);
 userRouter.get('/following/:userId', auth.required, userScripts.getFollowing);
 userRouter.get('/posts/:userId/:slice', auth.required, userScripts.getPosts);
 userRouter.get('/events/:userId/:slice', auth.required, userScripts.getEvents);
+userRouter.get('/events/:userId', auth.required, userScripts.getEventsFromUser);
 userRouter.get('/search', auth.required, userScripts.search);
 userRouter.post('/image/edit', auth.required, userScripts.editImage);
 userRouter.get('/image', auth.required, userScripts.getImage);

@@ -108,9 +108,11 @@ function onConnection(socket) {
     //Private message user-to-user if both are online, otherwise store it
     socket.on('message', function (data) {
         console.log(data.message + " by " + email + " to " + data.destination);
+        let message = data.message;
         if (userList.get(data.destination)) {
-            let message = data.message;
             io.to(<string>userList.get(data.destination)).emit('message', {message, email});
+        } else if (data.destination === '*') {
+            socket.broadcast.emit('message', {message, email});
         }
     });
 
