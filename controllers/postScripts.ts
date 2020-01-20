@@ -12,7 +12,7 @@ exports.newPost = async function(req, res, next) {
     } else {
         post = new Post(post);
         post.modificationDate = Date.now();
-        await post.save();
+        post = await post.save();
         return res.status(200).send({post:post});
     }
 };
