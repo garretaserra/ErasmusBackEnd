@@ -5,6 +5,7 @@ import Profile from '../models/profile';
 import Message from '../models/message';
 import Notification from '../models/notification';
 import AuthUser from '../models/authUser';
+import {UserRegister} from "../../ErasmusApp/src/app/models/User/userRegister";
 let Post = require('../models/post');
 let Event = require('../models/event');
 let Base = require('../models/base');
@@ -208,7 +209,7 @@ exports.updateActivity = async function(req, res) {
         fetch.push(userId);
         let result = await Base.find({owner: {$in:fetch}})
             .populate('members', '_id name', null)
-            .populate('owner', '_id name', null)
+            .populate('owner', '_id name profilePhoto', null)
             .populate('comments.owner','_id name', null)
             .sort( {modificationDate: -1 })
             .skip(slice)
@@ -275,7 +276,7 @@ exports.postMessage = async function(req: Request, res: Response) {
     const read: Boolean = false;
 
     const msg = new Message({author, destination, text, timestamp, read});
-    msg.save().then((data) => {
+    await msg.save().then((data) => {
         res.status(201).json(data);
     }).catch((err) => {
         res.status(500).json(err);
@@ -314,11 +315,24 @@ exports.ackMessages = async function(req: Request, res: Response) {
     const senderId: string = req.params.senderId;
     const receiverId: string = req.params.receiverId;
 
-    Message.updateMany({ author: senderId, destination: receiverId }, { read: true }).then((data) => {
+    await Message.updateMany({ author: senderId, destination: receiverId }, { read: true }).then((data) => {
         res.status(200).json(data);
     }).catch((err) => {
         res.status(500).json(err);
         console.log(err);
     });
 
+};
+
+exports.addErasmusInfo = async function(req, res) {
+    let userId = req.params.userId;
+    let info = req.body.info;
+
+    let result = await User.updateOne({_id:userId},{$set:info});
+    let user = await User.find({_id:userId});
+    if(result.n==0) {
+        return res.status(404).send({message:'User not found'});
+    } else {
+        return res.status(200).send({user:user});
+    }
 };

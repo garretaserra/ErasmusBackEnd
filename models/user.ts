@@ -6,12 +6,19 @@ import jwt from 'jsonwebtoken'
 
 const UserSchema: Schema = new Schema({
     email: { type: String, required: true, unique: true },
-    name: { type: String},
-    hash: { type: String},
-    salt: { type: String},
-    profilePhoto: String,
+    name: { type: String },
+    hash: { type: String },
+    salt: { type: String },
+    profilePhoto: String ,
     followers: [{ type: Schema.ObjectId, ref: 'User', unique: false }], //Gente que me sigue a mí
     following: [{ type: Schema.ObjectId, ref: 'User', unique: false }], //Gente a la que yo sigo
+    age: { type: Number },
+    course: { type: Number },
+    homeUniversity: { type: String },
+    destUniversity: {  type: String },
+    languages:[{
+        name: String
+    }]
 });
 
 UserSchema.methods.setPassword = function(password) {
