@@ -9,6 +9,7 @@ let Post = require('../models/post');
 let Event = require('../models/event');
 let Base = require('../models/base');
 let ObjectId = require('mongodb').ObjectID;
+const nodemailer = require("nodemailer");
 
 exports.login = async function(req, res, next) {
     let user = req.body;
@@ -38,6 +39,7 @@ exports.register = async function (req, res){
     else {
         let newUser = new User(user);
         newUser.setPassword(user.password);
+        sendEmail(newUser.email, newUser.name);
         return newUser.save()
             .then(() => res.status(200).json({
                 jwt: newUser.generateJWT(),
@@ -45,6 +47,33 @@ exports.register = async function (req, res){
             }));
     }
 };
+
+let transporter = nodemailer.createTransport({
+  service: 'gmail',
+  host:'smtp.gmail.com',
+  auth: {
+    user: 'erasmusappea@gmail.com',
+    pass: '1234567890aA%'
+  }
+});
+
+function sendEmail(email, username){
+  let mailOptions = {
+    from: 'erasmusappea@gmail.com',
+    to: email,
+    subject: 'Welcome to Erasmus App',
+    html: `<h1>Hi ${username}!</h1>
+                <p>Welcome to the Erasmus Social Network </p>
+                <p>We are delighted that you have registered in our app. We hope you enjoy all our content.</p>`
+  };
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+}
 
 exports.getAll = async function(req, res) {
     let userId = req.params.userId;
