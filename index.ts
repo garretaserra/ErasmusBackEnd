@@ -116,6 +116,11 @@ function onConnection(socket) {
         }
     });
 
+    socket.on('postnoti', function (postId) {
+        console.log('postnoti from ' + email + ' data: ' + postId);
+        socket.broadcast.emit('postnoti', {postId, author: email});
+    });
+
     socket.on('giveMeUserList', function () {
         socket.emit('userList', Array.from(userList));
     });
