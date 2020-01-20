@@ -298,6 +298,22 @@ exports.getMessages = async function(req: Request, res: Response) {
     }
 };
 
+exports.postMessage = async function(req: Request, res: Response) {
+    const author: string = req.body.author;
+    const destination: string = req.body.destination;
+    const text: string = req.body.text;
+    const timestamp: Date = new Date();
+    const read: Boolean = false;
+
+    const msg = new Message({author, destination, text, timestamp, read});
+    await msg.save().then((data) => {
+        res.status(201).json(data);
+    }).catch((err) => {
+        res.status(500).json(err);
+        console.log(err);
+    })
+};
+
 exports.getNotifications = async function(req: Request, res: Response) {
     let userId: string = req.params.userId;
     let user = await User.findOne({name:userId}).populate('notifications');
