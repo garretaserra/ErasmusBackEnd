@@ -8,6 +8,8 @@ import {UserRegister} from "../../ErasmusApp/src/app/models/User/userRegister";
 let Post = require('../models/post');
 let Event = require('../models/event');
 let Base = require('../models/base');
+let Notification = require('../models/notification');
+
 let ObjectId = require('mongodb').ObjectID;
 const nodemailer = require("nodemailer");
 
@@ -296,15 +298,27 @@ exports.getMessages = async function(req: Request, res: Response) {
     }
 };
 
-exports.postMessage = async function(req: Request, res: Response) {
+exports.getNotifications = async function(req: Request, res: Response) {
+    let userId: string = req.params.userId;
+    let user = await User.findOne({name:userId}).populate('notifications');
+
+    if (user.notifications) {
+        return res.status(200).json(user.notifications);
+    } else {
+        return res.status(404).send('Not Found');
+    }
+};
+
+exports.postNotification = async function(req: Request, res: Response) {
     const author: string = req.body.author;
     const destination: string = req.body.destination;
     const text: string = req.body.text;
+    const type: string = req.body.type;
+    const goToUrl: string = req.body.goToUrl;
     const timestamp: Date = new Date();
-    const read: Boolean = false;
 
-    const msg = new Message({author, destination, text, timestamp, read});
-    await msg.save().then((data) => {
+    const notification = new Notification({author, destination, text, type, goToUrl, timestamp});
+    notification.save().then((data) => {
         res.status(201).json(data);
     }).catch((err) => {
         res.status(500).json(err);
@@ -322,6 +336,7 @@ exports.ackMessages = async function(req: Request, res: Response) {
         res.status(500).json(err);
         console.log(err);
     });
+
 };
 
 exports.addErasmusInfo = async function(req, res) {

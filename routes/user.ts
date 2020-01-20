@@ -23,6 +23,7 @@ userRouter.get('/image', auth.required, userScripts.getImage);
 userRouter.delete('/:userId', auth.required, userScripts.dropOut);
 userRouter.post('/message', auth.required, userScripts.postMessage);
 userRouter.get('/messages/:userId', auth.required, userScripts.getMessages);
+userRouter.get('/notifications/:userId', auth.optional, userScripts.getNotifications);
 //Receiver wants to ACK senders' messages
 userRouter.put('/message/:senderId/:receiverId', auth.optional, userScripts.ackMessages);
 userRouter.put('/erasmusInfo/:userId', auth.optional, userScripts.addErasmusInfo);
