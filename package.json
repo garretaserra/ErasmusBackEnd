@@ -29,7 +29,7 @@
     "express-session": "^1.16.2",
     "http": "0.0.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.7.1",
+    "mongoose": "^5.13.15",
     "passport": "latest",
     "nodemailer": "^6.4.16",
     "passport-local": "^1.0.0",
