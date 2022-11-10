@@ -33,7 +33,7 @@
     "passport": "latest",
     "nodemailer": "^6.6.1",
     "passport-local": "^1.0.0",
-    "socket.io": "^2.4.0",
+    "socket.io": "^2.5.0",
     "swagger-ui-express": "^4.6.0",
     "ts-node-dev": "^1.1.8",
     "typescript": "^3.6.3"
